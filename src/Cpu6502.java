@@ -303,6 +303,11 @@ public class Cpu6502
         return (byte) 0x00;
     }
 
+    public List<Instruction> GetInstructionSet()
+    {
+        return instructionSet;
+    }
+
     // Register Set
     public byte GetRegisterA()
     {
