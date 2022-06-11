@@ -14,5 +14,10 @@ public enum Flags6502
         b = _b;
     }
 
+    public byte GetByte()
+    {
+        return b;
+    }
+
     private byte b;
 }

@@ -284,6 +284,19 @@ public class Cpu6502
 
     public void Clock()
     {
+        if (cycles == 0)
+        {
+            currentOpCode = ReadByte(PC);
+            PC++;
+            Instruction currentInstruction = GetInstructionSet().get(currentOpCode);
+
+            cycles = currentInstruction.GetCycles();
+            byte additionCycle1 = currentInstruction.GetAddrMode().Execute();
+            byte additionCycle2 = currentInstruction.GetOperation().Execute();
+            cycles += additionCycle1 & additionCycle2;
+        }
+
+        cycles--;
     }
 
     public void Reset()
@@ -653,6 +666,14 @@ public class Cpu6502
     }
     private void SetFlag(Flags6502 flag, boolean v)
     {
+        if (v)
+        {
+            F |= flag.GetByte();
+        }
+        else
+        {
+            F &= ~flag.GetByte();
+        }
     }
 
     // Registers

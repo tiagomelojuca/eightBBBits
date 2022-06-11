@@ -5,11 +5,6 @@ interface ByteFPtrVoid
 
 public class Instruction
 {
-    private String name;
-    private ByteFPtrVoid fptrOperation;
-    private ByteFPtrVoid fptrAddrMode;
-    private byte cycles;
-
     public Instruction(
         String _name,
         ByteFPtrVoid _fptrOperation,
@@ -22,4 +17,26 @@ public class Instruction
         fptrAddrMode = _fptrAddrMode;
         cycles = _cycles;
     }
+
+    public String GetName()
+    {
+        return name;
+    }
+    public ByteFPtrVoid GetOperation()
+    {
+        return fptrOperation;
+    }
+    public ByteFPtrVoid GetAddrMode()
+    {
+        return fptrAddrMode;
+    }
+    public byte GetCycles()
+    {
+        return cycles;
+    }
+
+    private String name;
+    private ByteFPtrVoid fptrOperation;
+    private ByteFPtrVoid fptrAddrMode;
+    private byte cycles;
 }
