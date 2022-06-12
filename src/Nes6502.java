@@ -1,9 +1,9 @@
 import java.util.List;
 import java.util.Vector;
 
-public class Cpu6502 implements Cpu
+public class Nes6502 implements Cpu
 {
-    public Cpu6502()
+    public Nes6502()
     {
         A  = 0x00;
         X  = 0x00;

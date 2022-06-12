@@ -36,6 +36,6 @@ public class Bus
         return ReadByte(addr, false);
     }
 
-    private Cpu6502 cpu;
+    private Nes6502 cpu;
     private byte[] ram;
 }
