@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Vector;
 
-public class Cpu6502
+public class Cpu6502 implements Cpu
 {
     public Cpu6502()
     {
@@ -282,93 +282,135 @@ public class Cpu6502
         bus = _bus;
     }
 
+    @Override
     public void Clock()
     {
         if (cycles == 0)
         {
             currentOpCode = ReadByte(PC);
+            SetFlag(Flags6502.Unused, true);
             PC++;
-            Instruction currentInstruction = GetInstructionSet().get(currentOpCode);
 
+            Instruction currentInstruction = GetInstructionSet().get(currentOpCode);
             cycles = currentInstruction.GetCycles();
             byte additionCycle1 = currentInstruction.GetAddrMode().Execute();
             byte additionCycle2 = currentInstruction.GetOperation().Execute();
             cycles += additionCycle1 & additionCycle2;
+
+            SetFlag(Flags6502.Unused, true);
         }
 
         cycles--;
     }
 
+    @Override
     public void Reset()
     {
+        addrAbs = 0xFFFC;
+        byte lo = ReadByte(addrAbs + 0);
+        byte hi = ReadByte(addrAbs + 1);
+
+        PC = (hi << 8) | lo;
+
+        A  = 0x01;
+        X  = 0x00;
+        Y  = 0x00;
+        SP = (byte) 0xFD;
+        F  = (byte) (0x00 | Flags6502.Unused.GetByte());
+
+        addrRel   = 0x0000;
+        addrAbs   = 0x0000;
+        lastFetch = 0x00;
+        cycles    = 0;
     }
 
+    @Override
     public void InterruptRequest()
     {
+        if (GetFlag(Flags6502.DisableInterrupts) == 0)
+        {
+            WriteByte(0x0100 + SP, (byte) ((PC >> 8) & 0x00FF));
+            SP--;
+            WriteByte(0x0100 + SP, (byte) (PC & 0x00FF));
+            SP--;
+
+            SetFlag(Flags6502.Break, false);
+            SetFlag(Flags6502.Unused, true);
+            SetFlag(Flags6502.DisableInterrupts, true);
+            WriteByte(0x0100 + SP, F);
+            SP--;
+
+            addrAbs = 0xFFFE;
+            byte lo = ReadByte(addrAbs + 0);
+            byte hi = ReadByte(addrAbs + 1);
+            PC = (hi << 8) | lo;
+
+            cycles = 7;
+        }
     }
 
+    @Override
     public void NonMaskableInterrupt()
     {
+        WriteByte(0x0100 + SP, (byte) ((PC >> 8) & 0x00FF));
+        SP--;
+        WriteByte(0x0100 + SP, (byte) (PC & 0x00FF));
+        SP--;
+
+        SetFlag(Flags6502.Break, false);
+        SetFlag(Flags6502.Unused, true);
+        SetFlag(Flags6502.DisableInterrupts, true);
+        WriteByte(0x0100 + SP, F);
+        SP--;
+
+        addrAbs = 0xFFFA;
+        byte lo = ReadByte(addrAbs + 0);
+        byte hi = ReadByte(addrAbs + 1);
+        PC = (hi << 8) | lo;
+
+        cycles = 8;
     }
 
+    @Override
     public byte FetchData()
     {
-        return (byte) 0x00;
+        Instruction currentInstruction = GetInstructionSet().get(currentOpCode);
+        if (currentInstruction.GetAddrMode() != (ByteFPtrVoid) this::IMP)
+        {
+            lastFetch = ReadByte(addrAbs);
+        }
+        return lastFetch;
     }
 
+    @Override
     public List<Instruction> GetInstructionSet()
     {
         return instructionSet;
     }
 
-    // Register Set
-    public byte GetRegisterA()
+    private void WriteByte(int addr, byte data)
     {
-        return A;
+        bus.WriteByte(addr, data);
     }
-    public void SetRegisterA(byte _A)
+    private byte ReadByte(int addr)
     {
-        A = _A;
+        return bus.ReadByte(addr, false);
     }
-    public byte GetRegisterX()
+
+    private byte GetFlag(Flags6502 flag)
     {
-        return X;
+        return (byte) ((F & flag.GetByte()) > 0 ? 1 : 0);
     }
-    public void SetRegisterX(byte _X)
+    private void SetFlag(Flags6502 flag, boolean v)
     {
-        X = _X;
-    }
-    public byte GetRegisterY()
-    {
-        return Y;
-    }
-    public void SetRegisterY(byte _Y)
-    {
-        Y = _Y;
-    }
-    public byte GetRegisterF()
-    {
-        return F;
-    }
-    public void SetRegisterF(byte _F)
-    {
-        F = _F;
-    }
-    public byte GetRegisterSP()
-    {
-        return SP;
-    }
-    public void SetRegisterSP(byte _SP)
-    {
-        SP = _SP;
-    }
-    public int GetRegisterPC()
-    {
-        return PC;
-    }
-    public void SetRegisterPC(byte _PC)
-    {
-        PC = _PC;
+        if (v)
+        {
+            F |= flag.GetByte();
+        }
+        else
+        {
+            F &= ~flag.GetByte();
+        }
     }
 
     // Addressing Modes
@@ -651,32 +693,7 @@ public class Cpu6502
         return (byte) 0x00;
     }
 
-    private void WriteByte(int addr, byte data)
-    {
-        bus.WriteByte(addr, data);
-    }
-    private byte ReadByte(int addr)
-    {
-        return bus.ReadByte(addr, false);
-    }
-
-    private byte GetFlag(Flags6502 flag)
-    {
-        return (byte) 0x00;
-    }
-    private void SetFlag(Flags6502 flag, boolean v)
-    {
-        if (v)
-        {
-            F |= flag.GetByte();
-        }
-        else
-        {
-            F &= ~flag.GetByte();
-        }
-    }
-
-    // Registers
+    // Register Set
     private byte A;
     private byte X;
     private byte Y;
@@ -691,7 +708,7 @@ public class Cpu6502
     private byte currentOpCode;
     private byte cycles;
 
-    // WARNING: this is NOT a data structure set, but a mathematical set instead
+    // WARNING: this is NOT intended to be a data structure set, but a mathematical set instead
     List<Instruction> instructionSet;
 
     // Misc
