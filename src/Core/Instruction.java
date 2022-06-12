@@ -1,3 +1,5 @@
+package Core;
+
 interface ByteFPtrVoid
 {
     byte Execute();

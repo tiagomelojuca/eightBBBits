@@ -1,3 +1,5 @@
+package Core;
+
 import java.util.List;public interface Cpu
 {
     public void Clock();

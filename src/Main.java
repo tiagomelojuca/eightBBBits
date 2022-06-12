@@ -1,6 +1,9 @@
+import GUI.GameWindow;
+
 public class Main
 {
-    public static void main(String[] args) {
-        System.out.println("Hello, 6502");
+    public static void main(String[] args)
+    {
+        new GameWindow();
     }
 }

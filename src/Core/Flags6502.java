@@ -1,3 +1,5 @@
+package Core;
+
 public enum Flags6502
 {
     CarryBit((byte) (1 << 0)),
