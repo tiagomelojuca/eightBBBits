@@ -1,9 +1,13 @@
 package Core;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-public class Nes6502 implements Cpu
+import Misc.Utils;
+
+public class Nes6502 implements Cpu8Bits
 {
     public Nes6502()
     {
@@ -279,6 +283,7 @@ public class Nes6502 implements Cpu
         instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7));
     }
 
+    @Override
     public void ConnectBus(Bus _bus)
     {
         bus = _bus;
@@ -293,7 +298,7 @@ public class Nes6502 implements Cpu
             SetFlag(Flags6502.Unused, true);
             PC++;
 
-            Instruction currentInstruction = GetInstructionSet().get(currentOpCode);
+            Instruction currentInstruction = GetInstructionSet().get(currentOpCode & 0xFF);
             cycles = currentInstruction.GetCycles();
             byte additionCycle1 = currentInstruction.GetAddrMode().Execute();
             byte additionCycle2 = currentInstruction.GetOperation().Execute();
@@ -376,7 +381,7 @@ public class Nes6502 implements Cpu
     @Override
     public byte FetchData()
     {
-        Instruction currentInstruction = GetInstructionSet().get(currentOpCode);
+        Instruction currentInstruction = GetInstructionSet().get(currentOpCode & 0xFF);
         if (currentInstruction.GetAddrMode() != (ByteFPtrVoid) this::IMP)
         {
             lastFetch = ReadByte(addrAbs);
@@ -413,6 +418,166 @@ public class Nes6502 implements Cpu
         {
             F &= ~flag.GetByte();
         }
+    }
+
+    public Map<Integer, String> Disassemble(int start, int stop)
+    {
+        Map<Integer, String> mapLines = new HashMap<Integer, String>();
+
+        int addr = start;
+        int lineAddr = 0;
+
+        byte val = 0x00;
+        byte hi  = 0x00;
+        byte lo  = 0x00;
+
+        while (addr <= stop)
+        {
+            lineAddr = addr;
+            String sInst = "$" + Utils.Hex(addr, 4) + ": ";
+            byte opcode = bus.ReadByte(addr, true);
+            addr++;
+            sInst += GetInstructionSet().get(opcode & 0xFF).GetName() + " ";
+
+            ByteFPtrVoid addrMode = GetInstructionSet().get(opcode & 0xFF).GetAddrMode();
+            if (addrMode == (ByteFPtrVoid) this::IMP)
+            {
+                sInst += " {IMP}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::IMM)
+            {
+                val = bus.ReadByte(addr, true);
+                addr++;
+                sInst += "#$" + Utils.Hex(val, 2) + " {IMM}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::ZP0)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "$" + Utils.Hex(lo, 2) + " {ZP0}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::ZPX)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "$" + Utils.Hex(lo, 2) + ", X {ZPX}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::ZPY)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "$" + Utils.Hex(lo, 2) + ", Y {ZPY}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::IZX)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "($" + Utils.Hex(lo, 2) + ", X) {IZX}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::IZY)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "($" + Utils.Hex(lo, 2) + "), Y {IZY}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::ABS)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = bus.ReadByte(addr, true);
+                addr++;
+                sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + " {ABS}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::ABX)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = bus.ReadByte(addr, true);
+                addr++;
+                sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + ", X {ABX}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::ABY)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = bus.ReadByte(addr, true);
+                addr++;
+                sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + ", Y {ABY}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::IND)
+            {
+                lo = bus.ReadByte(addr, true);
+                addr++;
+                hi = bus.ReadByte(addr, true);
+                addr++;
+                sInst += "($" + Utils.Hex((hi << 8) | lo, 4) + ") {IND}";
+            }
+            else if (addrMode == (ByteFPtrVoid) this::REL)
+            {
+                val = bus.ReadByte(addr, true);
+                addr++;
+                sInst += "$" + Utils.Hex(val, 2) + " [$" + Utils.Hex(addr + val, 4) + "] {REL}";
+            }
+
+            mapLines.put(lineAddr, sInst);
+        }
+
+        return mapLines;
+    }
+
+    // Register Set
+    public byte GetRegisterA()
+    {
+        return A;
+    }
+    public void SetRegisterA(byte _A)
+    {
+        A = _A;
+    }
+    public byte GetRegisterX()
+    {
+        return X;
+    }
+    public void SetRegisterX(byte _X)
+    {
+        X = _X;
+    }
+    public byte GetRegisterY()
+    {
+        return Y;
+    }
+    public void SetRegisterY(byte _Y)
+    {
+        Y = _Y;
+    }
+    public byte GetRegisterF()
+    {
+        return F;
+    }
+    public void SetRegisterF(byte _F)
+    {
+        F = _F;
+    }
+    public byte GetRegisterSP()
+    {
+        return SP;
+    }
+    public void SetRegisterSP(byte _SP)
+    {
+        SP = _SP;
+    }
+    public int GetRegisterPC()
+    {
+        return PC;
+    }
+    public void SetRegisterPC(byte _PC)
+    {
+        PC = _PC;
     }
 
     // Addressing Modes
@@ -695,7 +860,7 @@ public class Nes6502 implements Cpu
         return (byte) 0x00;
     }
 
-    // Register Set
+    // Registers
     private byte A;
     private byte X;
     private byte Y;

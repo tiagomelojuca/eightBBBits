@@ -12,6 +12,7 @@ public class Bus
             ram[i] = 0x00;
         }
 
+        cpu = new Nes6502();
         cpu.ConnectBus(this);
     }
 
@@ -36,6 +37,11 @@ public class Bus
     public byte ReadByte(int addr)
     {
         return ReadByte(addr, false);
+    }
+
+    public Nes6502 GetNesCpu()
+    {
+        return cpu;
     }
 
     private Nes6502 cpu;
