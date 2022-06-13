@@ -404,11 +404,11 @@ public class Nes6502 implements Cpu8Bits
 
     private void WriteByte(int addr, byte data)
     {
-        bus.WriteByte(addr, data);
+        bus.CpuWrite(addr, data);
     }
     private byte ReadByte(int addr)
     {
-        return bus.ReadByte(addr, false);
+        return bus.CpuRead(addr, false);
     }
 
     private byte GetFlag(Flags6502 flag)
@@ -442,7 +442,7 @@ public class Nes6502 implements Cpu8Bits
         {
             lineAddr = addr;
             String sInst = "$" + Utils.Hex(addr, 4) + ": ";
-            byte opcode = bus.ReadByte(addr, true);
+            byte opcode = bus.CpuRead(addr, true);
             addr++;
             sInst += GetInstruction(opcode).GetName() + " ";
 
@@ -453,80 +453,80 @@ public class Nes6502 implements Cpu8Bits
             }
             else if (addrMode == AddrModes.IMM)
             {
-                val = bus.ReadByte(addr, true);
+                val = bus.CpuRead(addr, true);
                 addr++;
                 sInst += "#$" + Utils.Hex(val, 2) + " {IMM}";
             }
             else if (addrMode == AddrModes.ZP0)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "$" + Utils.Hex(lo, 2) + " {ZP0}";
             }
             else if (addrMode == AddrModes.ZPX)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "$" + Utils.Hex(lo, 2) + ", X {ZPX}";
             }
             else if (addrMode == AddrModes.ZPY)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "$" + Utils.Hex(lo, 2) + ", Y {ZPY}";
             }
             else if (addrMode == AddrModes.IZX)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "($" + Utils.Hex(lo, 2) + ", X) {IZX}";
             }
             else if (addrMode == AddrModes.IZY)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "($" + Utils.Hex(lo, 2) + "), Y {IZY}";
             }
             else if (addrMode == AddrModes.ABS)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
-                hi = bus.ReadByte(addr, true);
+                hi = bus.CpuRead(addr, true);
                 addr++;
                 sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + " {ABS}";
             }
             else if (addrMode == AddrModes.ABX)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
-                hi = bus.ReadByte(addr, true);
+                hi = bus.CpuRead(addr, true);
                 addr++;
                 sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + ", X {ABX}";
             }
             else if (addrMode == AddrModes.ABY)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
-                hi = bus.ReadByte(addr, true);
+                hi = bus.CpuRead(addr, true);
                 addr++;
                 sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + ", Y {ABY}";
             }
             else if (addrMode == AddrModes.IND)
             {
-                lo = bus.ReadByte(addr, true);
+                lo = bus.CpuRead(addr, true);
                 addr++;
-                hi = bus.ReadByte(addr, true);
+                hi = bus.CpuRead(addr, true);
                 addr++;
                 sInst += "($" + Utils.Hex((hi << 8) | lo, 4) + ") {IND}";
             }
             else if (addrMode == AddrModes.REL)
             {
-                val = bus.ReadByte(addr, true);
+                val = bus.CpuRead(addr, true);
                 addr++;
                 sInst += "$" + Utils.Hex(val, 2) + " [$" + Utils.Hex(addr + (val & 0xFF), 4) + "] {REL}";
             }

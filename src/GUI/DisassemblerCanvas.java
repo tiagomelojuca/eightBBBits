@@ -44,12 +44,12 @@ public class DisassemblerCanvas extends DisplayCanvas
             rom = rom.substring(rom.length() > 2 ? 3 : 2);
 
             byte b = (byte) Integer.parseInt(bStr, 16);
-            bus.WriteByte(offset, b);
+            bus.CpuWrite(offset, b);
             offset++;
         }
 
-        bus.WriteByte(0xFFFC, (byte) 0x00);
-        bus.WriteByte(0xFFFD, (byte) 0x80);
+        bus.CpuWrite(0xFFFC, (byte) 0x00);
+        bus.CpuWrite(0xFFFD, (byte) 0x80);
 
         mapAsm = bus.GetNesCpu().Disassemble(0x0000, 0xFFFF);
 
@@ -119,7 +119,7 @@ public class DisassemblerCanvas extends DisplayCanvas
             String strOffset = "$" + Utils.Hex(addr, 4) + ":";
             for (int col = 0; col < cols; col++)
             {
-                strOffset += " " + Utils.Hex(bus.ReadByte(addr, true), 2);
+                strOffset += " " + Utils.Hex(bus.CpuRead(addr, true), 2);
                 addr += 1;
             }
             DrawString(nRamX, nRamY, strOffset);

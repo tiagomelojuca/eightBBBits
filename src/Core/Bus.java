@@ -4,41 +4,70 @@ public class Bus
 {
     public Bus()
     {
-        final int RAM_SZE = 64 * 1024;
-        ram = new byte[RAM_SZE];
+        clockCounter = 0;
+
+        final int RAM_SZE = 2 * 1024;
+        cpuRam = new byte[RAM_SZE];
 
         for(int i = 0; i < RAM_SZE; i++)
         {
-            ram[i] = 0x00;
+            cpuRam[i] = 0x00;
         }
 
         cpu = new Nes6502();
         cpu.ConnectBus(this);
     }
 
-    public void WriteByte(int addr, byte data)
+    public void InsertCartridge(Cartridge cartridge)
+    {
+        rom = cartridge;
+        ppu.ConnectCartridge(cartridge);
+    }
+
+    public void Reset()
+    {
+        cpu.Reset();
+        clockCounter = 0;
+    }
+
+    public void Clock()
+    {
+        //
+    }
+
+    public void CpuWrite(int addr, byte data)
     {
         addr &= 0xFFFF;
-        if(addr >= 0x0000 && addr <= 0xFFFF)
+        if(addr >= 0x0000 && addr <= 0x1FFF)
         {
-            ram[addr] = data;
+            cpuRam[addr & 0x07FF] = data;
+        }
+        else if (addr >= 0x2000 && addr <= 0x3FFF)
+        {
+            ppu.CpuWrite(addr & 0x0007, data);
         }
     }
 
-    public byte ReadByte(int addr, boolean readOnly)
+    public byte CpuRead(int addr, boolean readOnly)
     {
+        byte data = 0x00;
+
         addr &= 0xFFFF;
-        if(addr >= 0x0000 && addr <= 0xFFFF)
+        if(addr >= 0x0000 && addr <= 0x1FFF)
         {
-            return ram[addr];
+            data = cpuRam[addr & 0x07FF];
+        }
+        else if (addr >= 0x2000 && addr <= 0x3FFF)
+        {
+            data = ppu.CpuRead(addr & 0x0007, readOnly);
         }
 
-        return 0x00;
+        return data;
     }
 
-    public byte ReadByte(int addr)
+    public byte CpuRead(int addr)
     {
-        return ReadByte(addr, false);
+        return CpuRead(addr, false);
     }
 
     public Nes6502 GetNesCpu()
@@ -46,6 +75,10 @@ public class Bus
         return cpu;
     }
 
+    private int clockCounter;
+
     private Nes6502 cpu;
-    private byte[] ram;
+    private Ppu2C02 ppu;
+    private byte[] cpuRam;
+    private Cartridge rom;
 }
