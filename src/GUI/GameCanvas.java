@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Vector;
 import javax.swing.JPanel;
 
 import Core.Bus;
@@ -130,14 +134,14 @@ public class GameCanvas extends JPanel
     {
         Nes6502 nes = bus.GetNesCpu();
         DrawString(x, y, "STATUS:");
-		DrawString(x  + 64,  y, "N", GetColorFlagState(nes, Flags6502.Negative));
-		DrawString(x  + 80,  y, "V", GetColorFlagState(nes, Flags6502.Overflow));
-		DrawString(x  + 96,  y, "-", GetColorFlagState(nes, Flags6502.Unused));
-		DrawString(x  + 112, y, "B", GetColorFlagState(nes, Flags6502.Break));
-		DrawString(x  + 128, y, "D", GetColorFlagState(nes, Flags6502.DecimalMode));
-		DrawString(x  + 144, y, "I", GetColorFlagState(nes, Flags6502.DisableInterrupts));
-		DrawString(x  + 160, y, "Z", GetColorFlagState(nes, Flags6502.Zero));
-		DrawString(x  + 178, y, "C", GetColorFlagState(nes, Flags6502.CarryBit));
+		DrawString(x + 64,  y, "N", GetColorFlagState(nes, Flags6502.Negative));
+		DrawString(x + 80,  y, "V", GetColorFlagState(nes, Flags6502.Overflow));
+		DrawString(x + 96,  y, "-", GetColorFlagState(nes, Flags6502.Unused));
+		DrawString(x + 112, y, "B", GetColorFlagState(nes, Flags6502.Break));
+		DrawString(x + 128, y, "D", GetColorFlagState(nes, Flags6502.DecimalMode));
+		DrawString(x + 144, y, "I", GetColorFlagState(nes, Flags6502.DisableInterrupts));
+		DrawString(x + 160, y, "Z", GetColorFlagState(nes, Flags6502.Zero));
+		DrawString(x + 178, y, "C", GetColorFlagState(nes, Flags6502.CarryBit));
 		DrawString(x, y + 10, "PC: $" +      Utils.Hex(nes.GetRegisterPC(), 4));
 		DrawString(x, y + 20, "A: $"  +      Utils.Hex(nes.GetRegisterA(),  2) + "  [" + nes.GetRegisterA() + "]");
 		DrawString(x, y + 30, "X: $"  +      Utils.Hex(nes.GetRegisterX(),  2) + "  [" + nes.GetRegisterX() + "]");
@@ -147,7 +151,68 @@ public class GameCanvas extends JPanel
 
     private void DrawCode(int x, int y, int lines)
     {
-        //
+        List<Integer> keys = new Vector<Integer>();
+        Iterator<Map.Entry<Integer, String>> itKeys = mapAsm.entrySet().iterator();
+        while(itKeys.hasNext())
+        {
+            Map.Entry<Integer, String> entry = itKeys.next();
+            keys.add(entry.getKey());
+        }
+
+        int lineY = (lines >> 1) * 10 + y;
+
+        int searchedKey = bus.GetNesCpu().GetRegisterPC();
+        boolean containsKey = false;
+
+        ListIterator<Integer> it = keys.listIterator();
+        while (it.hasNext())
+        {
+            Integer key = it.next();
+            if (key == searchedKey)
+            {
+                containsKey = true;
+                break;
+            }
+        }
+
+        if (containsKey)
+        {
+            DrawString(x, lineY, mapAsm.get(searchedKey), Color.CYAN);
+            while (lineY < (lines * 10) + y) {
+                lineY += 10;
+                if (it.hasNext())
+                {
+                    Integer nextKey = it.next();
+                    DrawString(x, lineY, mapAsm.get(nextKey));
+                }
+            }
+        }
+
+        lineY = (lines >> 1) * 10 + y;
+
+        it = keys.listIterator();
+        containsKey = false;
+        while (it.hasNext())
+        {
+            Integer key = it.next();
+            if (key == searchedKey)
+            {
+                containsKey = true;
+                break;
+            }
+        }
+
+        if (containsKey)
+        {
+            while (lineY > y) {
+                lineY -= 10;
+                if (it.hasPrevious())
+                {
+                    Integer prevKey = it.previous();
+                    DrawString(x, lineY, mapAsm.get(prevKey));
+                }
+            }
+        }
     }
 
     private void ClearScr(java.awt.Color color)
