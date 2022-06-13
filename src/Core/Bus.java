@@ -18,6 +18,7 @@ public class Bus
 
     public void WriteByte(int addr, byte data)
     {
+        addr &= 0xFFFF;
         if(addr >= 0x0000 && addr <= 0xFFFF)
         {
             ram[addr] = data;
@@ -26,6 +27,7 @@ public class Bus
 
     public byte ReadByte(int addr, boolean readOnly)
     {
+        addr &= 0xFFFF;
         if(addr >= 0x0000 && addr <= 0xFFFF)
         {
             return ram[addr];
