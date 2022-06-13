@@ -12,7 +12,7 @@ import Primitives.IntWrapper;
 
 public class Cartridge
 {
-    Cartridge(String filePath)
+    public Cartridge(String filePath)
     {
         vPRGMem = new Vector<Byte>();
         vCHRMem = new Vector<Byte>();

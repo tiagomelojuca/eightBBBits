@@ -15,6 +15,7 @@ public class Bus
         }
 
         cpu = new Nes6502();
+        ppu = new Ppu2C02();
         cpu.ConnectBus(this);
     }
 
@@ -32,7 +33,13 @@ public class Bus
 
     public void Clock()
     {
-        //
+        ppu.Clock();
+        if (clockCounter % 3 == 0)
+        {
+            cpu.Clock();
+        }
+
+        clockCounter++;
     }
 
     public void CpuWrite(int addr, byte data)
@@ -73,6 +80,11 @@ public class Bus
     public Nes6502 GetNesCpu()
     {
         return cpu;
+    }
+
+    public Ppu2C02 GetNesPpu()
+    {
+        return ppu;
     }
 
     private int clockCounter;

@@ -1,6 +1,7 @@
 import GUI.GameWindow;
 import GUI.DisplayCanvas;
 import GUI.DisassemblerCanvas;
+import GUI.GameCanvas;
 
 public class Main
 {
