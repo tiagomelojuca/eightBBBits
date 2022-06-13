@@ -522,7 +522,7 @@ public class Nes6502 implements Cpu8Bits
             {
                 val = bus.ReadByte(addr, true);
                 addr++;
-                sInst += "$" + Utils.Hex(val, 2) + " [$" + Utils.Hex(addr + val, 4) + "] {REL}";
+                sInst += "$" + Utils.Hex(val, 2) + " [$" + Utils.Hex(addr + (val & 0xFF), 4) + "] {REL}";
             }
             else
             {
