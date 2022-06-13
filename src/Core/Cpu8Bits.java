@@ -10,5 +10,7 @@ public interface Cpu8Bits
     public void InterruptRequest();
     public void NonMaskableInterrupt();
     public byte FetchData();
+
     public List<Instruction> GetInstructionSet();
+    public Instruction GetInstruction(byte opCode);
 }

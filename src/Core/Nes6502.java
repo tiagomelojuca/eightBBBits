@@ -299,7 +299,7 @@ public class Nes6502 implements Cpu8Bits
             SetFlag(Flags6502.Unused, true);
             PC++;
 
-            Instruction currentInstruction = GetInstructionSet().get(currentOpCode & 0xFF);
+            Instruction currentInstruction = GetInstruction(currentOpCode);
             cycles = currentInstruction.GetCycles();
             byte additionCycle1 = currentInstruction.GetAddrMode().Execute();
             byte additionCycle2 = currentInstruction.GetOperation().Execute();
@@ -382,7 +382,7 @@ public class Nes6502 implements Cpu8Bits
     @Override
     public byte FetchData()
     {
-        Instruction currentInstruction = GetInstructionSet().get(currentOpCode & 0xFF);
+        Instruction currentInstruction = GetInstruction(currentOpCode);
         if (currentInstruction.GetAddrMode().GetMetaType() != AddrModes.IMP)
         {
             lastFetch = ReadByte(addrAbs);
@@ -394,6 +394,12 @@ public class Nes6502 implements Cpu8Bits
     public List<Instruction> GetInstructionSet()
     {
         return instructionSet;
+    }
+
+    @Override
+    public Instruction GetInstruction(byte opCode)
+    {
+        return GetInstructionSet().get(opCode & 0xFF);
     }
 
     private void WriteByte(int addr, byte data)
@@ -438,9 +444,9 @@ public class Nes6502 implements Cpu8Bits
             String sInst = "$" + Utils.Hex(addr, 4) + ": ";
             byte opcode = bus.ReadByte(addr, true);
             addr++;
-            sInst += GetInstructionSet().get(opcode & 0xFF).GetName() + " ";
+            sInst += GetInstruction(opcode).GetName() + " ";
 
-            AddrModes addrMode = GetInstructionSet().get(opcode & 0xFF).GetAddrMode().GetMetaType();
+            AddrModes addrMode = GetInstruction(opcode).GetAddrMode().GetMetaType();
             if (addrMode == AddrModes.IMP)
             {
                 sInst += " {IMP}";
@@ -744,7 +750,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x00);
         SetFlag(Flags6502.Negative, (temp & 0x80) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
+        if (GetInstruction(currentOpCode).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
@@ -1063,7 +1069,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x0000);
         SetFlag(Flags6502.Negative, (temp & 0x0080) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
+        if (GetInstruction(currentOpCode).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
@@ -1134,7 +1140,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x0000);
         SetFlag(Flags6502.Negative, (temp & 0x0080) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
+        if (GetInstruction(currentOpCode).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
@@ -1153,7 +1159,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x00);
         SetFlag(Flags6502.Negative, (temp & 0x0080) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
+        if (GetInstruction(currentOpCode).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
