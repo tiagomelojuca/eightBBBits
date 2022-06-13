@@ -530,6 +530,11 @@ public class Nes6502 implements Cpu8Bits
         return mapLines;
     }
 
+    public boolean Complete()
+    {
+        return cycles == 0;
+    }
+
     // Register Set
     public byte GetRegisterA()
     {

@@ -30,6 +30,11 @@ class CanvasProps
 
 public class GameCanvas extends JPanel
 {
+    public GameCanvas(VirtualKeyboard _vkb)
+    {
+        vkb = _vkb;
+    }
+
     private void OnCreate()
     {
         bus = new Bus();
@@ -38,18 +43,9 @@ public class GameCanvas extends JPanel
 
     private void OnLoop()
     {
-        ClearScr(CanvasProps.DEFAULT_BG_COLOR);
-        canvas.setFont(CanvasProps.DEFAULT_FONT);
-
-        int offsetX = 10;
-        int offsetY = 20;
-
-        DrawRam(offsetX + 2, offsetY +   2, 0x0000, 16, 16);
-		DrawRam(offsetX + 2, offsetY + 182, 0x8000, 16, 16);
-		DrawCpu(offsetX + 428, offsetY + 2);
-		DrawCode(offsetX + 428, offsetY + 72, 26);
-
-        DrawString(offsetX, 370, "SPACE = Step Instruction    R = RESET    I = IRQ    N = NMI");
+        InitScreen();
+        HandleInputs();
+        Draw();
     }
 
     @Override
@@ -223,8 +219,58 @@ public class GameCanvas extends JPanel
         canvas.setColor(old);
     }
 
+    private void InitScreen()
+    {
+        ClearScr(CanvasProps.DEFAULT_BG_COLOR);
+        canvas.setFont(CanvasProps.DEFAULT_FONT);
+    }
+
+    private void HandleInputs()
+    {
+        if (CheckForKey(VirtualKeys.VK_S))
+        {
+            do
+            {
+                bus.GetNesCpu().Clock();
+            }
+            while (!bus.GetNesCpu().Complete());
+        }
+
+        if (CheckForKey(VirtualKeys.VK_A))
+        {
+            bus.GetNesCpu().Reset();
+        }
+
+        if (CheckForKey(VirtualKeys.VK_O))
+        {
+            bus.GetNesCpu().InterruptRequest();
+        }
+
+        if (CheckForKey(VirtualKeys.VK_P))
+        {
+            bus.GetNesCpu().NonMaskableInterrupt();
+        }
+    }
+
+    public void Draw()
+    {
+        int offsetX = 10;
+        int offsetY = 20;
+        DrawRam(offsetX + 2, offsetY +   2, 0x0000, 16, 16);
+		DrawRam(offsetX + 2, offsetY + 182, 0x8000, 16, 16);
+		DrawCpu(offsetX + 428, offsetY + 2);
+		DrawCode(offsetX + 428, offsetY + 72, 26);
+        DrawString(offsetX, 370, "S = Step Instruction    A = RESET    O = IRQ    P = NMI");
+    }
+
+    private boolean CheckForKey(VirtualKeys key)
+    {
+        return vkb.GetKeyPress(key);
+    }
+
     private Graphics canvas;
     private boolean isInitialized;
+    VirtualKeyboard vkb;
 
     private Bus bus;
     private Map<Integer, String> mapAsm;
