@@ -26,262 +26,262 @@ public class Nes6502 implements Cpu8Bits
         cycles        = 0;
 
         instructionSet = new Vector<Instruction>();
-        instructionSet.add(new Instruction("BRK", this::BRK, this::IMM, (byte) 7)); // 0x00
-        instructionSet.add(new Instruction("ORA", this::ORA, this::IZX, (byte) 6)); // 0x01
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x02
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x03
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 3)); // 0x04
-        instructionSet.add(new Instruction("ORA", this::ORA, this::ZP0, (byte) 3)); // 0x05
-        instructionSet.add(new Instruction("ASL", this::ASL, this::ZP0, (byte) 5)); // 0x06
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x07
-        instructionSet.add(new Instruction("PHP", this::PHP, this::IMP, (byte) 3)); // 0x08
-        instructionSet.add(new Instruction("ORA", this::ORA, this::IMM, (byte) 2)); // 0x09
-        instructionSet.add(new Instruction("ASL", this::ASL, this::IMP, (byte) 2)); // 0x0A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x0B
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x0C
-        instructionSet.add(new Instruction("ORA", this::ORA, this::ABS, (byte) 4)); // 0x0D
-        instructionSet.add(new Instruction("ASL", this::ASL, this::ABS, (byte) 6)); // 0x0E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x0F
-        instructionSet.add(new Instruction("BPL", this::BPL, this::REL, (byte) 2)); // 0x10
-        instructionSet.add(new Instruction("ORA", this::ORA, this::IZY, (byte) 5)); // 0x11
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x12
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x13
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x14
-        instructionSet.add(new Instruction("ORA", this::ORA, this::ZPX, (byte) 4)); // 0x15
-        instructionSet.add(new Instruction("ASL", this::ASL, this::ZPX, (byte) 6)); // 0x16
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x17
-        instructionSet.add(new Instruction("CLC", this::CLC, this::IMP, (byte) 2)); // 0x18
-        instructionSet.add(new Instruction("ORA", this::ORA, this::ABY, (byte) 4)); // 0x19
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x1A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x1B
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x1C
-        instructionSet.add(new Instruction("ORA", this::ORA, this::ABX, (byte) 4)); // 0x1D
-        instructionSet.add(new Instruction("ASL", this::ASL, this::ABX, (byte) 7)); // 0x1E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x1F
-        instructionSet.add(new Instruction("JSR", this::JSR, this::ABS, (byte) 6)); // 0x20
-        instructionSet.add(new Instruction("AND", this::AND, this::IZX, (byte) 6)); // 0x21
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x22
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x23
-        instructionSet.add(new Instruction("BIT", this::BIT, this::ZP0, (byte) 3)); // 0x24
-        instructionSet.add(new Instruction("AND", this::AND, this::ZP0, (byte) 3)); // 0x25
-        instructionSet.add(new Instruction("ROL", this::ROL, this::ZP0, (byte) 5)); // 0x26
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x27
-        instructionSet.add(new Instruction("PLP", this::PLP, this::IMP, (byte) 4)); // 0x28
-        instructionSet.add(new Instruction("AND", this::AND, this::IMM, (byte) 2)); // 0x29
-        instructionSet.add(new Instruction("ROL", this::ROL, this::IMP, (byte) 2)); // 0x2A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x2B
-        instructionSet.add(new Instruction("BIT", this::BIT, this::ABS, (byte) 4)); // 0x2C
-        instructionSet.add(new Instruction("AND", this::AND, this::ABS, (byte) 4)); // 0x2D
-        instructionSet.add(new Instruction("ROL", this::ROL, this::ABS, (byte) 6)); // 0x2E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x2F
-        instructionSet.add(new Instruction("BMI", this::BMI, this::REL, (byte) 2)); // 0x30
-        instructionSet.add(new Instruction("AND", this::AND, this::IZY, (byte) 5)); // 0x31
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x32
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x33
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x34
-        instructionSet.add(new Instruction("AND", this::AND, this::ZPX, (byte) 4)); // 0x35
-        instructionSet.add(new Instruction("ROL", this::ROL, this::ZPX, (byte) 6)); // 0x36
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x37
-        instructionSet.add(new Instruction("SEC", this::SEC, this::IMP, (byte) 2)); // 0x38
-        instructionSet.add(new Instruction("AND", this::AND, this::ABY, (byte) 4)); // 0x39
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x3A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x3B
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x3C
-        instructionSet.add(new Instruction("AND", this::AND, this::ABX, (byte) 4)); // 0x3D
-        instructionSet.add(new Instruction("ROL", this::ROL, this::ABX, (byte) 7)); // 0x3E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x3F
-        instructionSet.add(new Instruction("RTI", this::RTI, this::IMP, (byte) 6)); // 0x40
-        instructionSet.add(new Instruction("EOR", this::EOR, this::IZX, (byte) 6)); // 0x41
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x42
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x43
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 3)); // 0x44
-        instructionSet.add(new Instruction("EOR", this::EOR, this::ZP0, (byte) 3)); // 0x45
-        instructionSet.add(new Instruction("LSR", this::LSR, this::ZP0, (byte) 5)); // 0x46
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x47
-        instructionSet.add(new Instruction("PHA", this::PHA, this::IMP, (byte) 3)); // 0x48
-        instructionSet.add(new Instruction("EOR", this::EOR, this::IMM, (byte) 2)); // 0x49
-        instructionSet.add(new Instruction("LSR", this::LSR, this::IMP, (byte) 2)); // 0x4A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x4B
-        instructionSet.add(new Instruction("JMP", this::JMP, this::ABS, (byte) 3)); // 0x4C
-        instructionSet.add(new Instruction("EOR", this::EOR, this::ABS, (byte) 4)); // 0x4D
-        instructionSet.add(new Instruction("LSR", this::LSR, this::ABS, (byte) 6)); // 0x4E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x4F
-        instructionSet.add(new Instruction("BVC", this::BVC, this::REL, (byte) 2)); // 0x50
-        instructionSet.add(new Instruction("EOR", this::EOR, this::IZY, (byte) 5)); // 0x51
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x52
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x53
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x54
-        instructionSet.add(new Instruction("EOR", this::EOR, this::ZPX, (byte) 4)); // 0x55
-        instructionSet.add(new Instruction("LSR", this::LSR, this::ZPX, (byte) 6)); // 0x56
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x57
-        instructionSet.add(new Instruction("CLI", this::CLI, this::IMP, (byte) 2)); // 0x58
-        instructionSet.add(new Instruction("EOR", this::EOR, this::ABY, (byte) 4)); // 0x59
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x5A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x5B
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x5C
-        instructionSet.add(new Instruction("EOR", this::EOR, this::ABX, (byte) 4)); // 0x5D
-        instructionSet.add(new Instruction("LSR", this::LSR, this::ABX, (byte) 7)); // 0x5E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x5F
-        instructionSet.add(new Instruction("RTS", this::RTS, this::IMP, (byte) 6)); // 0x60
-        instructionSet.add(new Instruction("ADC", this::ADC, this::IZX, (byte) 6)); // 0x61
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x62
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x63
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 3)); // 0x64
-        instructionSet.add(new Instruction("ADC", this::ADC, this::ZP0, (byte) 3)); // 0x65
-        instructionSet.add(new Instruction("ROR", this::ROR, this::ZP0, (byte) 5)); // 0x66
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x67
-        instructionSet.add(new Instruction("PLA", this::PLA, this::IMP, (byte) 4)); // 0x68
-        instructionSet.add(new Instruction("ADC", this::ADC, this::IMM, (byte) 2)); // 0x69
-        instructionSet.add(new Instruction("ROR", this::ROR, this::IMP, (byte) 2)); // 0x6A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x6B
-        instructionSet.add(new Instruction("JMP", this::JMP, this::IND, (byte) 5)); // 0x6C
-        instructionSet.add(new Instruction("ADC", this::ADC, this::ABS, (byte) 4)); // 0x6D
-        instructionSet.add(new Instruction("ROR", this::ROR, this::ABS, (byte) 6)); // 0x6E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x6F
-        instructionSet.add(new Instruction("BVS", this::BVS, this::REL, (byte) 2)); // 0x70
-        instructionSet.add(new Instruction("ADC", this::ADC, this::IZY, (byte) 5)); // 0x71
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x72
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0x73
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x74
-        instructionSet.add(new Instruction("ADC", this::ADC, this::ZPX, (byte) 4)); // 0x75
-        instructionSet.add(new Instruction("ROR", this::ROR, this::ZPX, (byte) 6)); // 0x76
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x77
-        instructionSet.add(new Instruction("SEI", this::SEI, this::IMP, (byte) 2)); // 0x78
-        instructionSet.add(new Instruction("ADC", this::ADC, this::ABY, (byte) 4)); // 0x79
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x7A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x7B
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0x7C
-        instructionSet.add(new Instruction("ADC", this::ADC, this::ABX, (byte) 4)); // 0x7D
-        instructionSet.add(new Instruction("ROR", this::ROR, this::ABX, (byte) 7)); // 0x7E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0x7F
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x80
-        instructionSet.add(new Instruction("STA", this::STA, this::IZX, (byte) 6)); // 0x81
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x82
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x83
-        instructionSet.add(new Instruction("STY", this::STY, this::ZP0, (byte) 3)); // 0x84
-        instructionSet.add(new Instruction("STA", this::STA, this::ZP0, (byte) 3)); // 0x85
-        instructionSet.add(new Instruction("STX", this::STX, this::ZP0, (byte) 3)); // 0x86
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 3)); // 0x87
-        instructionSet.add(new Instruction("DEY", this::DEY, this::IMP, (byte) 2)); // 0x88
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0x89
-        instructionSet.add(new Instruction("TXA", this::TXA, this::IMP, (byte) 2)); // 0x8A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x8B
-        instructionSet.add(new Instruction("STY", this::STY, this::ABS, (byte) 4)); // 0x8C
-        instructionSet.add(new Instruction("STA", this::STA, this::ABS, (byte) 4)); // 0x8D
-        instructionSet.add(new Instruction("STX", this::STX, this::ABS, (byte) 4)); // 0x8E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 4)); // 0x8F
-        instructionSet.add(new Instruction("BCC", this::BCC, this::REL, (byte) 2)); // 0x90
-        instructionSet.add(new Instruction("STA", this::STA, this::IZY, (byte) 6)); // 0x91
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0x92
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0x93
-        instructionSet.add(new Instruction("STY", this::STY, this::ZPX, (byte) 4)); // 0x94
-        instructionSet.add(new Instruction("STA", this::STA, this::ZPX, (byte) 4)); // 0x95
-        instructionSet.add(new Instruction("STX", this::STX, this::ZPY, (byte) 4)); // 0x96
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 4)); // 0x97
-        instructionSet.add(new Instruction("TYA", this::TYA, this::IMP, (byte) 2)); // 0x98
-        instructionSet.add(new Instruction("STA", this::STA, this::ABY, (byte) 5)); // 0x99
-        instructionSet.add(new Instruction("TXS", this::TXS, this::IMP, (byte) 2)); // 0x9A
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x9B
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 5)); // 0x9C
-        instructionSet.add(new Instruction("STA", this::STA, this::ABX, (byte) 5)); // 0x9D
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x9E
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0x9F
-        instructionSet.add(new Instruction("LDY", this::LDY, this::IMM, (byte) 2)); // 0xA0
-        instructionSet.add(new Instruction("LDA", this::LDA, this::IZX, (byte) 6)); // 0xA1
-        instructionSet.add(new Instruction("LDX", this::LDX, this::IMM, (byte) 2)); // 0xA2
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0xA3
-        instructionSet.add(new Instruction("LDY", this::LDY, this::ZP0, (byte) 3)); // 0xA4
-        instructionSet.add(new Instruction("LDA", this::LDA, this::ZP0, (byte) 3)); // 0xA5
-        instructionSet.add(new Instruction("LDX", this::LDX, this::ZP0, (byte) 3)); // 0xA6
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 3)); // 0xA7
-        instructionSet.add(new Instruction("TAY", this::TAY, this::IMP, (byte) 2)); // 0xA8
-        instructionSet.add(new Instruction("LDA", this::LDA, this::IMM, (byte) 2)); // 0xA9
-        instructionSet.add(new Instruction("TAX", this::TAX, this::IMP, (byte) 2)); // 0xAA
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0xAB
-        instructionSet.add(new Instruction("LDY", this::LDY, this::ABS, (byte) 4)); // 0xAC
-        instructionSet.add(new Instruction("LDA", this::LDA, this::ABS, (byte) 4)); // 0xAD
-        instructionSet.add(new Instruction("LDX", this::LDX, this::ABS, (byte) 4)); // 0xAE
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 4)); // 0xAF
-        instructionSet.add(new Instruction("BCS", this::BCS, this::REL, (byte) 2)); // 0xB0
-        instructionSet.add(new Instruction("LDA", this::LDA, this::IZY, (byte) 5)); // 0xB1
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0xB2
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0xB3
-        instructionSet.add(new Instruction("LDY", this::LDY, this::ZPX, (byte) 4)); // 0xB4
-        instructionSet.add(new Instruction("LDA", this::LDA, this::ZPX, (byte) 4)); // 0xB5
-        instructionSet.add(new Instruction("LDX", this::LDX, this::ZPY, (byte) 4)); // 0xB6
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 4)); // 0xB7
-        instructionSet.add(new Instruction("CLV", this::CLV, this::IMP, (byte) 2)); // 0xB8
-        instructionSet.add(new Instruction("LDA", this::LDA, this::ABY, (byte) 4)); // 0xB9
-        instructionSet.add(new Instruction("TSX", this::TSX, this::IMP, (byte) 2)); // 0xBA
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 4)); // 0xBB
-        instructionSet.add(new Instruction("LDY", this::LDY, this::ABX, (byte) 4)); // 0xBC
-        instructionSet.add(new Instruction("LDA", this::LDA, this::ABX, (byte) 4)); // 0xBD
-        instructionSet.add(new Instruction("LDX", this::LDX, this::ABY, (byte) 4)); // 0xBE
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 4)); // 0xBF
-        instructionSet.add(new Instruction("CPY", this::CPY, this::IMM, (byte) 2)); // 0xC0
-        instructionSet.add(new Instruction("CMP", this::CMP, this::IZX, (byte) 6)); // 0xC1
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0xC2
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0xC3
-        instructionSet.add(new Instruction("CPY", this::CPY, this::ZP0, (byte) 3)); // 0xC4
-        instructionSet.add(new Instruction("CMP", this::CMP, this::ZP0, (byte) 3)); // 0xC5
-        instructionSet.add(new Instruction("DEC", this::DEC, this::ZP0, (byte) 5)); // 0xC6
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0xC7
-        instructionSet.add(new Instruction("INY", this::INY, this::IMP, (byte) 2)); // 0xC8
-        instructionSet.add(new Instruction("CMP", this::CMP, this::IMM, (byte) 2)); // 0xC9
-        instructionSet.add(new Instruction("DEX", this::DEX, this::IMP, (byte) 2)); // 0xCA
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0xCB
-        instructionSet.add(new Instruction("CPY", this::CPY, this::ABS, (byte) 4)); // 0xCC
-        instructionSet.add(new Instruction("CMP", this::CMP, this::ABS, (byte) 4)); // 0xCD
-        instructionSet.add(new Instruction("DEC", this::DEC, this::ABS, (byte) 6)); // 0xCE
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0xCF
-        instructionSet.add(new Instruction("BNE", this::BNE, this::REL, (byte) 2)); // 0xD0
-        instructionSet.add(new Instruction("CMP", this::CMP, this::IZY, (byte) 5)); // 0xD1
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0xD2
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0xD3
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0xD4
-        instructionSet.add(new Instruction("CMP", this::CMP, this::ZPX, (byte) 4)); // 0xD5
-        instructionSet.add(new Instruction("DEC", this::DEC, this::ZPX, (byte) 6)); // 0xD6
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0xD7
-        instructionSet.add(new Instruction("CLD", this::CLD, this::IMP, (byte) 2)); // 0xD8
-        instructionSet.add(new Instruction("CMP", this::CMP, this::ABY, (byte) 4)); // 0xD9
-        instructionSet.add(new Instruction("NOP", this::NOP, this::IMP, (byte) 2)); // 0xDA
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0xDB
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0xDC
-        instructionSet.add(new Instruction("CMP", this::CMP, this::ABX, (byte) 4)); // 0xDD
-        instructionSet.add(new Instruction("DEC", this::DEC, this::ABX, (byte) 7)); // 0xDE
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0xDF
-        instructionSet.add(new Instruction("CPX", this::CPX, this::IMM, (byte) 2)); // 0xE0
-        instructionSet.add(new Instruction("SBC", this::SBC, this::IZX, (byte) 6)); // 0xE1
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 2)); // 0xE2
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0xE3
-        instructionSet.add(new Instruction("CPX", this::CPX, this::ZP0, (byte) 3)); // 0xE4
-        instructionSet.add(new Instruction("SBC", this::SBC, this::ZP0, (byte) 3)); // 0xE5
-        instructionSet.add(new Instruction("INC", this::INC, this::ZP0, (byte) 5)); // 0xE6
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 5)); // 0xE7
-        instructionSet.add(new Instruction("INX", this::INX, this::IMP, (byte) 2)); // 0xE8
-        instructionSet.add(new Instruction("SBC", this::SBC, this::IMM, (byte) 2)); // 0xE9
-        instructionSet.add(new Instruction("NOP", this::NOP, this::IMP, (byte) 2)); // 0xEA
-        instructionSet.add(new Instruction("???", this::SBC, this::IMP, (byte) 2)); // 0xEB
-        instructionSet.add(new Instruction("CPX", this::CPX, this::ABS, (byte) 4)); // 0xEC
-        instructionSet.add(new Instruction("SBC", this::SBC, this::ABS, (byte) 4)); // 0xED
-        instructionSet.add(new Instruction("INC", this::INC, this::ABS, (byte) 6)); // 0xEE
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0xEF
-        instructionSet.add(new Instruction("BEQ", this::BEQ, this::REL, (byte) 2)); // 0xF0
-        instructionSet.add(new Instruction("SBC", this::SBC, this::IZY, (byte) 5)); // 0xF1
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 2)); // 0xF2
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 8)); // 0xF3
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0xF4
-        instructionSet.add(new Instruction("SBC", this::SBC, this::ZPX, (byte) 4)); // 0xF5
-        instructionSet.add(new Instruction("INC", this::INC, this::ZPX, (byte) 6)); // 0xF6
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 6)); // 0xF7
-        instructionSet.add(new Instruction("SED", this::SED, this::IMP, (byte) 2)); // 0xF8
-        instructionSet.add(new Instruction("SBC", this::SBC, this::ABY, (byte) 4)); // 0xF9
-        instructionSet.add(new Instruction("NOP", this::NOP, this::IMP, (byte) 2)); // 0xFA
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0xFB
-        instructionSet.add(new Instruction("???", this::NOP, this::IMP, (byte) 4)); // 0xFC
-        instructionSet.add(new Instruction("SBC", this::SBC, this::ABX, (byte) 4)); // 0xFD
-        instructionSet.add(new Instruction("INC", this::INC, this::ABX, (byte) 7)); // 0xFE
-        instructionSet.add(new Instruction("???", this::XXX, this::IMP, (byte) 7)); // 0xFF
+        instructionSet.add(new Instruction("BRK", this::BRK, AddrModes.IMM, this::IMM, (byte) 7)); // 0x00
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.IZX, this::IZX, (byte) 6)); // 0x01
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x02
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x03
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 3)); // 0x04
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x05
+        instructionSet.add(new Instruction("ASL", this::ASL, AddrModes.ZP0, this::ZP0, (byte) 5)); // 0x06
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x07
+        instructionSet.add(new Instruction("PHP", this::PHP, AddrModes.IMP, this::IMP, (byte) 3)); // 0x08
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.IMM, this::IMM, (byte) 2)); // 0x09
+        instructionSet.add(new Instruction("ASL", this::ASL, AddrModes.IMP, this::IMP, (byte) 2)); // 0x0A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x0B
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x0C
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.ABS, this::ABS, (byte) 4)); // 0x0D
+        instructionSet.add(new Instruction("ASL", this::ASL, AddrModes.ABS, this::ABS, (byte) 6)); // 0x0E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x0F
+        instructionSet.add(new Instruction("BPL", this::BPL, AddrModes.REL, this::REL, (byte) 2)); // 0x10
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.IZY, this::IZY, (byte) 5)); // 0x11
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x12
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x13
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x14
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0x15
+        instructionSet.add(new Instruction("ASL", this::ASL, AddrModes.ZPX, this::ZPX, (byte) 6)); // 0x16
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x17
+        instructionSet.add(new Instruction("CLC", this::CLC, AddrModes.IMP, this::IMP, (byte) 2)); // 0x18
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.ABY, this::ABY, (byte) 4)); // 0x19
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x1A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x1B
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x1C
+        instructionSet.add(new Instruction("ORA", this::ORA, AddrModes.ABX, this::ABX, (byte) 4)); // 0x1D
+        instructionSet.add(new Instruction("ASL", this::ASL, AddrModes.ABX, this::ABX, (byte) 7)); // 0x1E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x1F
+        instructionSet.add(new Instruction("JSR", this::JSR, AddrModes.ABS, this::ABS, (byte) 6)); // 0x20
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.IZX, this::IZX, (byte) 6)); // 0x21
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x22
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x23
+        instructionSet.add(new Instruction("BIT", this::BIT, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x24
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x25
+        instructionSet.add(new Instruction("ROL", this::ROL, AddrModes.ZP0, this::ZP0, (byte) 5)); // 0x26
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x27
+        instructionSet.add(new Instruction("PLP", this::PLP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x28
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.IMM, this::IMM, (byte) 2)); // 0x29
+        instructionSet.add(new Instruction("ROL", this::ROL, AddrModes.IMP, this::IMP, (byte) 2)); // 0x2A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x2B
+        instructionSet.add(new Instruction("BIT", this::BIT, AddrModes.ABS, this::ABS, (byte) 4)); // 0x2C
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.ABS, this::ABS, (byte) 4)); // 0x2D
+        instructionSet.add(new Instruction("ROL", this::ROL, AddrModes.ABS, this::ABS, (byte) 6)); // 0x2E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x2F
+        instructionSet.add(new Instruction("BMI", this::BMI, AddrModes.REL, this::REL, (byte) 2)); // 0x30
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.IZY, this::IZY, (byte) 5)); // 0x31
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x32
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x33
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x34
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0x35
+        instructionSet.add(new Instruction("ROL", this::ROL, AddrModes.ZPX, this::ZPX, (byte) 6)); // 0x36
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x37
+        instructionSet.add(new Instruction("SEC", this::SEC, AddrModes.IMP, this::IMP, (byte) 2)); // 0x38
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.ABY, this::ABY, (byte) 4)); // 0x39
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x3A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x3B
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x3C
+        instructionSet.add(new Instruction("AND", this::AND, AddrModes.ABX, this::ABX, (byte) 4)); // 0x3D
+        instructionSet.add(new Instruction("ROL", this::ROL, AddrModes.ABX, this::ABX, (byte) 7)); // 0x3E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x3F
+        instructionSet.add(new Instruction("RTI", this::RTI, AddrModes.IMP, this::IMP, (byte) 6)); // 0x40
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.IZX, this::IZX, (byte) 6)); // 0x41
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x42
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x43
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 3)); // 0x44
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x45
+        instructionSet.add(new Instruction("LSR", this::LSR, AddrModes.ZP0, this::ZP0, (byte) 5)); // 0x46
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x47
+        instructionSet.add(new Instruction("PHA", this::PHA, AddrModes.IMP, this::IMP, (byte) 3)); // 0x48
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.IMM, this::IMM, (byte) 2)); // 0x49
+        instructionSet.add(new Instruction("LSR", this::LSR, AddrModes.IMP, this::IMP, (byte) 2)); // 0x4A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x4B
+        instructionSet.add(new Instruction("JMP", this::JMP, AddrModes.ABS, this::ABS, (byte) 3)); // 0x4C
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.ABS, this::ABS, (byte) 4)); // 0x4D
+        instructionSet.add(new Instruction("LSR", this::LSR, AddrModes.ABS, this::ABS, (byte) 6)); // 0x4E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x4F
+        instructionSet.add(new Instruction("BVC", this::BVC, AddrModes.REL, this::REL, (byte) 2)); // 0x50
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.IZY, this::IZY, (byte) 5)); // 0x51
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x52
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x53
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x54
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0x55
+        instructionSet.add(new Instruction("LSR", this::LSR, AddrModes.ZPX, this::ZPX, (byte) 6)); // 0x56
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x57
+        instructionSet.add(new Instruction("CLI", this::CLI, AddrModes.IMP, this::IMP, (byte) 2)); // 0x58
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.ABY, this::ABY, (byte) 4)); // 0x59
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x5A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x5B
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x5C
+        instructionSet.add(new Instruction("EOR", this::EOR, AddrModes.ABX, this::ABX, (byte) 4)); // 0x5D
+        instructionSet.add(new Instruction("LSR", this::LSR, AddrModes.ABX, this::ABX, (byte) 7)); // 0x5E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x5F
+        instructionSet.add(new Instruction("RTS", this::RTS, AddrModes.IMP, this::IMP, (byte) 6)); // 0x60
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.IZX, this::IZX, (byte) 6)); // 0x61
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x62
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x63
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 3)); // 0x64
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x65
+        instructionSet.add(new Instruction("ROR", this::ROR, AddrModes.ZP0, this::ZP0, (byte) 5)); // 0x66
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x67
+        instructionSet.add(new Instruction("PLA", this::PLA, AddrModes.IMP, this::IMP, (byte) 4)); // 0x68
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.IMM, this::IMM, (byte) 2)); // 0x69
+        instructionSet.add(new Instruction("ROR", this::ROR, AddrModes.IMP, this::IMP, (byte) 2)); // 0x6A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x6B
+        instructionSet.add(new Instruction("JMP", this::JMP, AddrModes.IND, this::IND, (byte) 5)); // 0x6C
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.ABS, this::ABS, (byte) 4)); // 0x6D
+        instructionSet.add(new Instruction("ROR", this::ROR, AddrModes.ABS, this::ABS, (byte) 6)); // 0x6E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x6F
+        instructionSet.add(new Instruction("BVS", this::BVS, AddrModes.REL, this::REL, (byte) 2)); // 0x70
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.IZY, this::IZY, (byte) 5)); // 0x71
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x72
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0x73
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x74
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0x75
+        instructionSet.add(new Instruction("ROR", this::ROR, AddrModes.ZPX, this::ZPX, (byte) 6)); // 0x76
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x77
+        instructionSet.add(new Instruction("SEI", this::SEI, AddrModes.IMP, this::IMP, (byte) 2)); // 0x78
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.ABY, this::ABY, (byte) 4)); // 0x79
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x7A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x7B
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0x7C
+        instructionSet.add(new Instruction("ADC", this::ADC, AddrModes.ABX, this::ABX, (byte) 4)); // 0x7D
+        instructionSet.add(new Instruction("ROR", this::ROR, AddrModes.ABX, this::ABX, (byte) 7)); // 0x7E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0x7F
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x80
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.IZX, this::IZX, (byte) 6)); // 0x81
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x82
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x83
+        instructionSet.add(new Instruction("STY", this::STY, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x84
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x85
+        instructionSet.add(new Instruction("STX", this::STX, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0x86
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 3)); // 0x87
+        instructionSet.add(new Instruction("DEY", this::DEY, AddrModes.IMP, this::IMP, (byte) 2)); // 0x88
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0x89
+        instructionSet.add(new Instruction("TXA", this::TXA, AddrModes.IMP, this::IMP, (byte) 2)); // 0x8A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x8B
+        instructionSet.add(new Instruction("STY", this::STY, AddrModes.ABS, this::ABS, (byte) 4)); // 0x8C
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.ABS, this::ABS, (byte) 4)); // 0x8D
+        instructionSet.add(new Instruction("STX", this::STX, AddrModes.ABS, this::ABS, (byte) 4)); // 0x8E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 4)); // 0x8F
+        instructionSet.add(new Instruction("BCC", this::BCC, AddrModes.REL, this::REL, (byte) 2)); // 0x90
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.IZY, this::IZY, (byte) 6)); // 0x91
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0x92
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0x93
+        instructionSet.add(new Instruction("STY", this::STY, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0x94
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0x95
+        instructionSet.add(new Instruction("STX", this::STX, AddrModes.ZPY, this::ZPY, (byte) 4)); // 0x96
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 4)); // 0x97
+        instructionSet.add(new Instruction("TYA", this::TYA, AddrModes.IMP, this::IMP, (byte) 2)); // 0x98
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.ABY, this::ABY, (byte) 5)); // 0x99
+        instructionSet.add(new Instruction("TXS", this::TXS, AddrModes.IMP, this::IMP, (byte) 2)); // 0x9A
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x9B
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 5)); // 0x9C
+        instructionSet.add(new Instruction("STA", this::STA, AddrModes.ABX, this::ABX, (byte) 5)); // 0x9D
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x9E
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0x9F
+        instructionSet.add(new Instruction("LDY", this::LDY, AddrModes.IMM, this::IMM, (byte) 2)); // 0xA0
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.IZX, this::IZX, (byte) 6)); // 0xA1
+        instructionSet.add(new Instruction("LDX", this::LDX, AddrModes.IMM, this::IMM, (byte) 2)); // 0xA2
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0xA3
+        instructionSet.add(new Instruction("LDY", this::LDY, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xA4
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xA5
+        instructionSet.add(new Instruction("LDX", this::LDX, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xA6
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 3)); // 0xA7
+        instructionSet.add(new Instruction("TAY", this::TAY, AddrModes.IMP, this::IMP, (byte) 2)); // 0xA8
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.IMM, this::IMM, (byte) 2)); // 0xA9
+        instructionSet.add(new Instruction("TAX", this::TAX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xAA
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xAB
+        instructionSet.add(new Instruction("LDY", this::LDY, AddrModes.ABS, this::ABS, (byte) 4)); // 0xAC
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.ABS, this::ABS, (byte) 4)); // 0xAD
+        instructionSet.add(new Instruction("LDX", this::LDX, AddrModes.ABS, this::ABS, (byte) 4)); // 0xAE
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 4)); // 0xAF
+        instructionSet.add(new Instruction("BCS", this::BCS, AddrModes.REL, this::REL, (byte) 2)); // 0xB0
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.IZY, this::IZY, (byte) 5)); // 0xB1
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xB2
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0xB3
+        instructionSet.add(new Instruction("LDY", this::LDY, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0xB4
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0xB5
+        instructionSet.add(new Instruction("LDX", this::LDX, AddrModes.ZPY, this::ZPY, (byte) 4)); // 0xB6
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 4)); // 0xB7
+        instructionSet.add(new Instruction("CLV", this::CLV, AddrModes.IMP, this::IMP, (byte) 2)); // 0xB8
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.ABY, this::ABY, (byte) 4)); // 0xB9
+        instructionSet.add(new Instruction("TSX", this::TSX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xBA
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 4)); // 0xBB
+        instructionSet.add(new Instruction("LDY", this::LDY, AddrModes.ABX, this::ABX, (byte) 4)); // 0xBC
+        instructionSet.add(new Instruction("LDA", this::LDA, AddrModes.ABX, this::ABX, (byte) 4)); // 0xBD
+        instructionSet.add(new Instruction("LDX", this::LDX, AddrModes.ABY, this::ABY, (byte) 4)); // 0xBE
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 4)); // 0xBF
+        instructionSet.add(new Instruction("CPY", this::CPY, AddrModes.IMM, this::IMM, (byte) 2)); // 0xC0
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.IZX, this::IZX, (byte) 6)); // 0xC1
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0xC2
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0xC3
+        instructionSet.add(new Instruction("CPY", this::CPY, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xC4
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xC5
+        instructionSet.add(new Instruction("DEC", this::DEC, AddrModes.ZP0, this::ZP0, (byte) 5)); // 0xC6
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0xC7
+        instructionSet.add(new Instruction("INY", this::INY, AddrModes.IMP, this::IMP, (byte) 2)); // 0xC8
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.IMM, this::IMM, (byte) 2)); // 0xC9
+        instructionSet.add(new Instruction("DEX", this::DEX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xCA
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xCB
+        instructionSet.add(new Instruction("CPY", this::CPY, AddrModes.ABS, this::ABS, (byte) 4)); // 0xCC
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.ABS, this::ABS, (byte) 4)); // 0xCD
+        instructionSet.add(new Instruction("DEC", this::DEC, AddrModes.ABS, this::ABS, (byte) 6)); // 0xCE
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0xCF
+        instructionSet.add(new Instruction("BNE", this::BNE, AddrModes.REL, this::REL, (byte) 2)); // 0xD0
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.IZY, this::IZY, (byte) 5)); // 0xD1
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xD2
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0xD3
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0xD4
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0xD5
+        instructionSet.add(new Instruction("DEC", this::DEC, AddrModes.ZPX, this::ZPX, (byte) 6)); // 0xD6
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0xD7
+        instructionSet.add(new Instruction("CLD", this::CLD, AddrModes.IMP, this::IMP, (byte) 2)); // 0xD8
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.ABY, this::ABY, (byte) 4)); // 0xD9
+        instructionSet.add(new Instruction("NOP", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0xDA
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0xDB
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0xDC
+        instructionSet.add(new Instruction("CMP", this::CMP, AddrModes.ABX, this::ABX, (byte) 4)); // 0xDD
+        instructionSet.add(new Instruction("DEC", this::DEC, AddrModes.ABX, this::ABX, (byte) 7)); // 0xDE
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0xDF
+        instructionSet.add(new Instruction("CPX", this::CPX, AddrModes.IMM, this::IMM, (byte) 2)); // 0xE0
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.IZX, this::IZX, (byte) 6)); // 0xE1
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0xE2
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0xE3
+        instructionSet.add(new Instruction("CPX", this::CPX, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xE4
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.ZP0, this::ZP0, (byte) 3)); // 0xE5
+        instructionSet.add(new Instruction("INC", this::INC, AddrModes.ZP0, this::ZP0, (byte) 5)); // 0xE6
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 5)); // 0xE7
+        instructionSet.add(new Instruction("INX", this::INX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xE8
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.IMM, this::IMM, (byte) 2)); // 0xE9
+        instructionSet.add(new Instruction("NOP", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0xEA
+        instructionSet.add(new Instruction("???", this::SBC, AddrModes.IMP, this::IMP, (byte) 2)); // 0xEB
+        instructionSet.add(new Instruction("CPX", this::CPX, AddrModes.ABS, this::ABS, (byte) 4)); // 0xEC
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.ABS, this::ABS, (byte) 4)); // 0xED
+        instructionSet.add(new Instruction("INC", this::INC, AddrModes.ABS, this::ABS, (byte) 6)); // 0xEE
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0xEF
+        instructionSet.add(new Instruction("BEQ", this::BEQ, AddrModes.REL, this::REL, (byte) 2)); // 0xF0
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.IZY, this::IZY, (byte) 5)); // 0xF1
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 2)); // 0xF2
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 8)); // 0xF3
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0xF4
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.ZPX, this::ZPX, (byte) 4)); // 0xF5
+        instructionSet.add(new Instruction("INC", this::INC, AddrModes.ZPX, this::ZPX, (byte) 6)); // 0xF6
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 6)); // 0xF7
+        instructionSet.add(new Instruction("SED", this::SED, AddrModes.IMP, this::IMP, (byte) 2)); // 0xF8
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.ABY, this::ABY, (byte) 4)); // 0xF9
+        instructionSet.add(new Instruction("NOP", this::NOP, AddrModes.IMP, this::IMP, (byte) 2)); // 0xFA
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0xFB
+        instructionSet.add(new Instruction("???", this::NOP, AddrModes.IMP, this::IMP, (byte) 4)); // 0xFC
+        instructionSet.add(new Instruction("SBC", this::SBC, AddrModes.ABX, this::ABX, (byte) 4)); // 0xFD
+        instructionSet.add(new Instruction("INC", this::INC, AddrModes.ABX, this::ABX, (byte) 7)); // 0xFE
+        instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0xFF
     }
 
     @Override
@@ -383,7 +383,7 @@ public class Nes6502 implements Cpu8Bits
     public byte FetchData()
     {
         Instruction currentInstruction = GetInstructionSet().get(currentOpCode & 0xFF);
-        if (currentInstruction.GetAddrMode() != (ByteFPtrVoid) this::IMP)
+        if (currentInstruction.GetAddrMode().GetMetaType() != AddrModes.IMP)
         {
             lastFetch = ReadByte(addrAbs);
         }
@@ -440,53 +440,53 @@ public class Nes6502 implements Cpu8Bits
             addr++;
             sInst += GetInstructionSet().get(opcode & 0xFF).GetName() + " ";
 
-            ByteFPtrVoid addrMode = GetInstructionSet().get(opcode & 0xFF).GetAddrMode();
-            if (addrMode == (ByteFPtrVoid) this::IMP)
+            AddrModes addrMode = GetInstructionSet().get(opcode & 0xFF).GetAddrMode().GetMetaType();
+            if (addrMode == AddrModes.IMP)
             {
                 sInst += " {IMP}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::IMM)
+            else if (addrMode == AddrModes.IMM)
             {
                 val = bus.ReadByte(addr, true);
                 addr++;
                 sInst += "#$" + Utils.Hex(val, 2) + " {IMM}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::ZP0)
+            else if (addrMode == AddrModes.ZP0)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "$" + Utils.Hex(lo, 2) + " {ZP0}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::ZPX)
+            else if (addrMode == AddrModes.ZPX)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "$" + Utils.Hex(lo, 2) + ", X {ZPX}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::ZPY)
+            else if (addrMode == AddrModes.ZPY)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "$" + Utils.Hex(lo, 2) + ", Y {ZPY}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::IZX)
+            else if (addrMode == AddrModes.IZX)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "($" + Utils.Hex(lo, 2) + ", X) {IZX}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::IZY)
+            else if (addrMode == AddrModes.IZY)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
                 hi = 0x00;
                 sInst += "($" + Utils.Hex(lo, 2) + "), Y {IZY}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::ABS)
+            else if (addrMode == AddrModes.ABS)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
@@ -494,7 +494,7 @@ public class Nes6502 implements Cpu8Bits
                 addr++;
                 sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + " {ABS}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::ABX)
+            else if (addrMode == AddrModes.ABX)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
@@ -502,7 +502,7 @@ public class Nes6502 implements Cpu8Bits
                 addr++;
                 sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + ", X {ABX}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::ABY)
+            else if (addrMode == AddrModes.ABY)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
@@ -510,7 +510,7 @@ public class Nes6502 implements Cpu8Bits
                 addr++;
                 sInst += "$" + Utils.Hex((hi << 8) | lo, 4) + ", Y {ABY}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::IND)
+            else if (addrMode == AddrModes.IND)
             {
                 lo = bus.ReadByte(addr, true);
                 addr++;
@@ -518,11 +518,15 @@ public class Nes6502 implements Cpu8Bits
                 addr++;
                 sInst += "($" + Utils.Hex((hi << 8) | lo, 4) + ") {IND}";
             }
-            else if (addrMode == (ByteFPtrVoid) this::REL)
+            else if (addrMode == AddrModes.REL)
             {
                 val = bus.ReadByte(addr, true);
                 addr++;
                 sInst += "$" + Utils.Hex(val, 2) + " [$" + Utils.Hex(addr + val, 4) + "] {REL}";
+            }
+            else
+            {
+                sInst += "???";
             }
 
             mapLines.put(lineAddr, sInst);
@@ -740,7 +744,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x00);
         SetFlag(Flags6502.Negative, (temp & 0x80) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode() == (ByteFPtrVoid) this::IMP)
+        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
@@ -1059,7 +1063,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x0000);
         SetFlag(Flags6502.Negative, (temp & 0x0080) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode() == (ByteFPtrVoid) this::IMP)
+        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
@@ -1130,7 +1134,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x0000);
         SetFlag(Flags6502.Negative, (temp & 0x0080) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode() == (ByteFPtrVoid) this::IMP)
+        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }
@@ -1149,7 +1153,7 @@ public class Nes6502 implements Cpu8Bits
         SetFlag(Flags6502.Zero, (temp & 0x00FF) == 0x00);
         SetFlag(Flags6502.Negative, (temp & 0x0080) != 0);
 
-        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode() == (ByteFPtrVoid) this::IMP)
+        if (GetInstructionSet().get(currentOpCode & 0xFF).GetAddrMode().GetMetaType() == AddrModes.IMP)
         {
             A = (byte) (temp & 0x00FF);
         }

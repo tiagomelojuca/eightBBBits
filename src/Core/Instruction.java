@@ -7,13 +7,14 @@ public class Instruction
     public Instruction(
         String _name,
         ByteFPtrVoid _fptrOperation,
+        AddrModes _addrMode,
         ByteFPtrVoid _fptrAddrMode,
         byte _cycles
     )
     {
         name = _name;
         fptrOperation = _fptrOperation;
-        fptrAddrMode = _fptrAddrMode;
+        addrMode = new AddrMode(_addrMode, _fptrAddrMode);
         cycles = _cycles;
     }
 
@@ -25,9 +26,9 @@ public class Instruction
     {
         return fptrOperation;
     }
-    public ByteFPtrVoid GetAddrMode()
+    public AddrMode GetAddrMode()
     {
-        return fptrAddrMode;
+        return addrMode;
     }
     public byte GetCycles()
     {
@@ -36,6 +37,6 @@ public class Instruction
 
     private String name;
     private ByteFPtrVoid fptrOperation;
-    private ByteFPtrVoid fptrAddrMode;
+    private AddrMode addrMode;
     private byte cycles;
 }
