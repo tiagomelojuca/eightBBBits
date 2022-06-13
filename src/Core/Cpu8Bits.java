@@ -1,7 +1,6 @@
 package Core;
 
 import java.util.List;
-import java.util.Map;
 
 public interface Cpu8Bits
 {

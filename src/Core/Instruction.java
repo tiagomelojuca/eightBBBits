@@ -1,9 +1,6 @@
 package Core;
 
-interface ByteFPtrVoid
-{
-    byte Execute();
-}
+import Primitives.ByteFPtrVoid;
 
 public class Instruction
 {
