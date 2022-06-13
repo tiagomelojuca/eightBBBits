@@ -79,11 +79,19 @@ public class GameCanvas extends JPanel
     {
         if (CheckForKey(VirtualKeys.VK_S))
         {
-            do
+            if (!waitingForRelease)
             {
-                bus.GetNesCpu().Clock();
+                do
+                {
+                    bus.GetNesCpu().Clock();
+                }
+                while (!bus.GetNesCpu().Complete());
             }
-            while (!bus.GetNesCpu().Complete());
+            waitingForRelease = true;
+        }
+        else
+        {
+            waitingForRelease = false;
         }
 
         if (CheckForKey(VirtualKeys.VK_A))
@@ -274,6 +282,8 @@ public class GameCanvas extends JPanel
     private Graphics canvas;
     private boolean isInitialized;
     VirtualKeyboard vkb;
+
+    boolean waitingForRelease;
 
     private Bus bus;
     private Map<Integer, String> mapAsm;
