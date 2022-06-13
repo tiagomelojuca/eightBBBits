@@ -183,7 +183,7 @@ public class GameCanvas extends JPanel
 
         int lineY = (lines >> 1) * 10 + y;
 
-        int searchedKey = bus.GetNesCpu().GetRegisterPC();
+        int searchedKey = bus.GetNesCpu().GetRegisterPC() & 0xFFFF;
         boolean containsKey = false;
 
         ListIterator<Integer> it = keys.listIterator();
@@ -226,6 +226,7 @@ public class GameCanvas extends JPanel
 
         if (containsKey)
         {
+            it.previous();
             while (lineY > y) {
                 lineY -= 10;
                 if (it.hasPrevious())
