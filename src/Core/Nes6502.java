@@ -588,51 +588,113 @@ public class Nes6502 implements Cpu8Bits
     // Addressing Modes
     public byte IMP()
     {
-        return (byte) 0x00;
-    }
-    public byte ZP0()
-    {
-        return (byte) 0x00;
-    }
-    public byte ZPY()
-    {
-        return (byte) 0x00;
-    }
-    public byte ABS()
-    {
-        return (byte) 0x00;
-    }
-    public byte ABY()
-    {
-        return (byte) 0x00;
-    }
-    public byte IZX()
-    {
+        lastFetch = A;
         return (byte) 0x00;
     }
     public byte IMM()
     {
+        addrAbs = PC++;
+        return (byte) 0x00;
+    }
+    public byte ZP0()
+    {
+        addrAbs = ReadByte(PC);
+        PC++;
+        addrAbs &= 0x00FF;
         return (byte) 0x00;
     }
     public byte ZPX()
     {
+        addrAbs = ReadByte(PC) + X;
+        PC++;
+        addrAbs &= 0x00FF;
+        return (byte) 0x00;
+    }
+    public byte ZPY()
+    {
+        addrAbs = ReadByte(PC) + Y;
+        PC++;
+        addrAbs &= 0x00FF;
         return (byte) 0x00;
     }
     public byte REL()
     {
+        addrRel = ReadByte(PC);
+        PC++;
+        if ((addrRel & 0x80) != 0)
+        {
+            addrRel |= 0xFF00;
+        }
+        return (byte) 0x00;
+    }
+    public byte ABS()
+    {
+        byte lo = ReadByte(PC);
+        PC++;
+        byte hi = ReadByte(PC);
+        PC++;
+        addrAbs = (hi << 8) | lo;
         return (byte) 0x00;
     }
     public byte ABX()
     {
-        return (byte) 0x00;
+        byte lo = ReadByte(PC);
+        PC++;
+        byte hi = ReadByte(PC);
+        PC++;
+        addrAbs = (hi << 8) | lo;
+        addrAbs += X;
+
+        return (addrAbs & 0xFF00) != (hi << 8) ? (byte) 1 : (byte) 0;
+    }
+    public byte ABY()
+    {
+        byte lo = ReadByte(PC);
+        PC++;
+        byte hi = ReadByte(PC);
+        PC++;
+        addrAbs = (hi << 8) | lo;
+        addrAbs += Y;
+
+        return (addrAbs & 0xFF00) != (hi << 8) ? (byte) 1 : (byte) 0;
     }
     public byte IND()
     {
+        int lo = ReadByte(PC);
+        PC++;
+        int hi = ReadByte(PC);
+        PC++;
+        int ptr = (hi << 8) | lo;
+
+        if (lo == 0x00FF)
+        {
+            addrAbs = (ReadByte(ptr & 0xFF00) << 8) | ReadByte(ptr + 0);
+        }
+        else
+        {
+            addrAbs = (ReadByte(ptr + 1) << 8) | ReadByte(ptr + 0);
+        }
+
+        return (byte) 0x00;
+    }
+    public byte IZX()
+    {
+        int t = ReadByte(PC);
+        PC++;
+        int lo = ReadByte((int) (t + (int) X) & 0x00FF);
+        int hi = ReadByte((int) (t + (int) X + 1) & 0x00FF);
+        addrAbs = (hi << 8) | lo;
         return (byte) 0x00;
     }
     public byte IZY()
     {
-        return (byte) 0x00;
+        int t = ReadByte(PC);
+        PC++;
+        int lo = ReadByte(t & 0x00FF);
+        int hi = ReadByte((t + 1) & 0x00FF);
+        addrAbs = (hi << 8) | lo;
+        addrAbs += Y;
+        return (addrAbs & 0xFF00) != (hi << 8) ? (byte) 1 : (byte) 0;
     }
 
     // OpCodes
