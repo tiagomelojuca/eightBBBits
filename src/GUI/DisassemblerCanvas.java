@@ -1,47 +1,34 @@
 package GUI;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
-import javax.swing.JPanel;
 
 import Core.Bus;
 import Core.Flags6502;
 import Core.Nes6502;
-import Defs.NesDisplay;
 import Misc.Utils;
 
-class CanvasProps
+public class DisassemblerCanvas extends DisplayCanvas
 {
-    public static final int WIDTH =  640;
-    public static final int HEIGHT = 480;
+    @Override
+    protected int DefaultWidth()  { return 640; }
+    @Override
+    protected int DefaultHeight() { return 480; }
 
-    public static final Color DEFAULT_BG_COLOR = new Color(50, 60, 170);
-    public static final Color DEFAULT_FG_COLOR = Color.WHITE;
-
-    public static final Font DEFAULT_FONT = new Font(Font.MONOSPACED, Font.BOLD, 12);
-}
-
-public class GameCanvas extends JPanel
-{
-    public GameCanvas(VirtualKeyboard _vkb)
-    {
-        vkb = _vkb;
-    }
-
-    private void OnCreate()
+    @Override
+    protected void OnCreate()
     {
         bus = new Bus();
         LoadROM("A2 0A 8E 00 00 A2 03 8E 01 00 AC 00 00 A9 00 18 6D 01 00 88 D0 FA 8D 02 00 EA EA EA");
     }
 
-    private void OnLoop()
+    @Override
+    protected void OnLoop()
     {
         InitScreen();
         HandleInputs();
@@ -71,15 +58,15 @@ public class GameCanvas extends JPanel
 
     private void InitScreen()
     {
-        ClearScr(CanvasProps.DEFAULT_BG_COLOR);
-        canvas.setFont(CanvasProps.DEFAULT_FONT);
+        ClearScr(new Color(50, 60, 170));
+        canvas.setFont(new Font(Font.MONOSPACED, Font.BOLD, 12));
     }
 
     private void HandleInputs()
     {
         if (CheckForKey(VirtualKeys.VK_S))
         {
-            if (!waitingForRelease)
+            if (!lockInputKey)
             {
                 do
                 {
@@ -87,11 +74,11 @@ public class GameCanvas extends JPanel
                 }
                 while (!bus.GetNesCpu().Complete());
             }
-            waitingForRelease = true;
+            lockInputKey = true;
         }
         else
         {
-            waitingForRelease = false;
+            lockInputKey = false;
         }
 
         if (CheckForKey(VirtualKeys.VK_A))
@@ -119,26 +106,6 @@ public class GameCanvas extends JPanel
 		DrawCpu(offsetX + 428, offsetY);
 		DrawCode(offsetX + 428, offsetY + 70, 26);
         DrawString(offsetX, 370, "S = Step Instruction   A = RESET   O = IRQ   P = NMI");
-    }
-
-    // Drawing Primitives
-    private void ClearScr(java.awt.Color color)
-    {
-        java.awt.Color old = canvas.getColor();
-        canvas.setColor(color);
-        canvas.fillRect(0, 0, CanvasProps.WIDTH, CanvasProps.HEIGHT);
-        canvas.setColor(old);
-    }
-    private void DrawString(int x, int y, String str, java.awt.Color color)
-    {
-        java.awt.Color old = canvas.getColor();
-        canvas.setColor(color);
-        canvas.drawString(str, x, y);
-        canvas.setColor(old);
-    }
-    private void DrawString(int x, int y, String str)
-    {
-        DrawString(x, y, str, CanvasProps.DEFAULT_FG_COLOR);
     }
 
     // Drawing Data
@@ -251,40 +218,9 @@ public class GameCanvas extends JPanel
     {
         return (nes.GetRegisterF() & f.GetByte()) != 0 ? Color.GREEN : Color.RED;
     }
-    private boolean CheckForKey(VirtualKeys key)
-    {
-        return vkb.GetKeyPress(key);
-    }
-
-    // Inheritance
-    @Override
-    public Dimension getPreferredSize()
-    {
-        return new Dimension(CanvasProps.WIDTH, CanvasProps.HEIGHT);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g)
-    {
-        canvas = g;
-        super.paintComponent(canvas);
-
-        if (!isInitialized)
-        {
-            OnCreate();
-            isInitialized = true;
-        }
-
-        OnLoop();
-        repaint();
-    }
-
-    private Graphics canvas;
-    private boolean isInitialized;
-    VirtualKeyboard vkb;
-
-    boolean waitingForRelease;
 
     private Bus bus;
     private Map<Integer, String> mapAsm;
+
+    private boolean lockInputKey;
 }

@@ -33,9 +33,14 @@ class KeyChecker extends KeyAdapter
 
 public class GameWindow
 {
-    public GameWindow() {
-        VirtualKeyboard vkb = new VirtualKeyboard();
+    public GameWindow(DisplayCanvas _canvas) {
+        attachedCanvas = _canvas;
+        vkb = new VirtualKeyboard();
+        attachedCanvas.Attach(vkb);
+    }
 
+    public void Start()
+    {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -51,12 +56,10 @@ public class GameWindow
                     UnsupportedLookAndFeelException e
                 ) {}
 
-                GameCanvas canvas = new GameCanvas(vkb);
-
                 JFrame frame = new JFrame("eightBBBits");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
-                frame.add(canvas);
+                frame.add(attachedCanvas);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
@@ -65,4 +68,7 @@ public class GameWindow
             }
         });
     }
+
+    private DisplayCanvas attachedCanvas;
+    private VirtualKeyboard vkb;
 }
