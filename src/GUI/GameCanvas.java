@@ -59,14 +59,14 @@ public class GameCanvas extends JPanel
             byte b = (byte) Integer.parseInt(bStr, 16);
             bus.WriteByte(offset, b);
             offset++;
-
-            bus.WriteByte(0xFFFC, (byte) 0x00);
-            bus.WriteByte(0xFFFD, (byte) 0x00);
-
-            mapAsm = bus.GetNesCpu().Disassemble(0x0000, 0xFFFF);
-
-            bus.GetNesCpu().Reset();
         }
+
+        bus.WriteByte(0xFFFC, (byte) 0x00);
+        bus.WriteByte(0xFFFD, (byte) 0x80);
+
+        mapAsm = bus.GetNesCpu().Disassemble(0x0000, 0xFFFF);
+
+        bus.GetNesCpu().Reset();
     }
 
     private void InitScreen()

@@ -320,7 +320,7 @@ public class Nes6502 implements Cpu8Bits
 
         PC = (hi << 8) | lo;
 
-        A  = 0x01;
+        A  = 0x00;
         X  = 0x00;
         Y  = 0x00;
         SP = (byte) 0xFD;
@@ -329,7 +329,7 @@ public class Nes6502 implements Cpu8Bits
         addrRel   = 0x0000;
         addrAbs   = 0x0000;
         lastFetch = 0x00;
-        cycles    = 0;
+        cycles    = 8;
     }
 
     @Override

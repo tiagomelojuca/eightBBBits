@@ -16,4 +16,9 @@ public class Utils
 
         return s;
     }
+
+    public static String Hex(byte b, int d)
+    {
+        return Hex(b & 0xFF, d);
+    }
 }
