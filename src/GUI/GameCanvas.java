@@ -22,10 +22,10 @@ class CanvasProps
     public static final int WIDTH =  640;
     public static final int HEIGHT = 480;
 
-    public static final Color DEFAULT_BG_COLOR = Color.BLUE;
+    public static final Color DEFAULT_BG_COLOR = new Color(50, 60, 170);
     public static final Color DEFAULT_FG_COLOR = Color.WHITE;
 
-    public static final Font DEFAULT_FONT = new Font(Font.MONOSPACED, Font.BOLD, 10);
+    public static final Font DEFAULT_FONT = new Font(Font.MONOSPACED, Font.BOLD, 12);
 }
 
 public class GameCanvas extends JPanel
@@ -45,29 +45,7 @@ public class GameCanvas extends JPanel
     {
         InitScreen();
         HandleInputs();
-        Draw();
-    }
-
-    @Override
-    public Dimension getPreferredSize()
-    {
-        return new Dimension(CanvasProps.WIDTH, CanvasProps.HEIGHT);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g)
-    {
-        canvas = g;
-        super.paintComponent(canvas);
-
-        if (!isInitialized)
-        {
-            OnCreate();
-            isInitialized = true;
-        }
-
-        OnLoop();
-        repaint();
+        DrawCanvas();
     }
 
     private void LoadROM(String rom)
@@ -91,6 +69,58 @@ public class GameCanvas extends JPanel
         }
     }
 
+    private void InitScreen()
+    {
+        ClearScr(CanvasProps.DEFAULT_BG_COLOR);
+        canvas.setFont(CanvasProps.DEFAULT_FONT);
+    }
+
+    private void HandleInputs()
+    {
+        if (CheckForKey(VirtualKeys.VK_S))
+        {
+            do
+            {
+                bus.GetNesCpu().Clock();
+            }
+            while (!bus.GetNesCpu().Complete());
+        }
+
+        if (CheckForKey(VirtualKeys.VK_A))
+        {
+            bus.GetNesCpu().Reset();
+        }
+
+        if (CheckForKey(VirtualKeys.VK_O))
+        {
+            bus.GetNesCpu().InterruptRequest();
+        }
+
+        if (CheckForKey(VirtualKeys.VK_P))
+        {
+            bus.GetNesCpu().NonMaskableInterrupt();
+        }
+    }
+
+    public void DrawCanvas()
+    {
+        int offsetX = 10;
+        int offsetY = 20;
+        DrawRam(offsetX, offsetY,       0x0000, 16, 16);
+		DrawRam(offsetX, offsetY + 180, 0x8000, 16, 16);
+		DrawCpu(offsetX + 428, offsetY);
+		DrawCode(offsetX + 428, offsetY + 70, 26);
+        DrawString(offsetX, 370, "S = Step Instruction   A = RESET   O = IRQ   P = NMI");
+    }
+
+    // Drawing Primitives
+    private void ClearScr(java.awt.Color color)
+    {
+        java.awt.Color old = canvas.getColor();
+        canvas.setColor(color);
+        canvas.fillRect(0, 0, CanvasProps.WIDTH, CanvasProps.HEIGHT);
+        canvas.setColor(old);
+    }
     private void DrawString(int x, int y, String str, java.awt.Color color)
     {
         java.awt.Color old = canvas.getColor();
@@ -103,6 +133,7 @@ public class GameCanvas extends JPanel
         DrawString(x, y, str, CanvasProps.DEFAULT_FG_COLOR);
     }
 
+    // Drawing Data
     private void DrawRam(int x, int y, int addr, int rows, int cols)
     {
         int nRamX = x;
@@ -119,11 +150,6 @@ public class GameCanvas extends JPanel
             DrawString(nRamX, nRamY, strOffset);
             nRamY += 10;
         }
-    }
-
-    private java.awt.Color GetColorFlagState(Nes6502 nes, Flags6502 f)
-    {
-        return (nes.GetRegisterF() & f.GetByte()) != 0 ? Color.GREEN : Color.RED;
     }
 
     private void DrawCpu(int x, int y)
@@ -211,61 +237,37 @@ public class GameCanvas extends JPanel
         }
     }
 
-    private void ClearScr(java.awt.Color color)
+    // Helpers
+    private java.awt.Color GetColorFlagState(Nes6502 nes, Flags6502 f)
     {
-        java.awt.Color old = canvas.getColor();
-        canvas.setColor(color);
-        canvas.fillRect(0, 0, CanvasProps.WIDTH, CanvasProps.HEIGHT);
-        canvas.setColor(old);
+        return (nes.GetRegisterF() & f.GetByte()) != 0 ? Color.GREEN : Color.RED;
     }
-
-    private void InitScreen()
-    {
-        ClearScr(CanvasProps.DEFAULT_BG_COLOR);
-        canvas.setFont(CanvasProps.DEFAULT_FONT);
-    }
-
-    private void HandleInputs()
-    {
-        if (CheckForKey(VirtualKeys.VK_S))
-        {
-            do
-            {
-                bus.GetNesCpu().Clock();
-            }
-            while (!bus.GetNesCpu().Complete());
-        }
-
-        if (CheckForKey(VirtualKeys.VK_A))
-        {
-            bus.GetNesCpu().Reset();
-        }
-
-        if (CheckForKey(VirtualKeys.VK_O))
-        {
-            bus.GetNesCpu().InterruptRequest();
-        }
-
-        if (CheckForKey(VirtualKeys.VK_P))
-        {
-            bus.GetNesCpu().NonMaskableInterrupt();
-        }
-    }
-
-    public void Draw()
-    {
-        int offsetX = 10;
-        int offsetY = 20;
-        DrawRam(offsetX + 2, offsetY +   2, 0x0000, 16, 16);
-		DrawRam(offsetX + 2, offsetY + 182, 0x8000, 16, 16);
-		DrawCpu(offsetX + 428, offsetY + 2);
-		DrawCode(offsetX + 428, offsetY + 72, 26);
-        DrawString(offsetX, 370, "S = Step Instruction    A = RESET    O = IRQ    P = NMI");
-    }
-
     private boolean CheckForKey(VirtualKeys key)
     {
         return vkb.GetKeyPress(key);
+    }
+
+    // Inheritance
+    @Override
+    public Dimension getPreferredSize()
+    {
+        return new Dimension(CanvasProps.WIDTH, CanvasProps.HEIGHT);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g)
+    {
+        canvas = g;
+        super.paintComponent(canvas);
+
+        if (!isInitialized)
+        {
+            OnCreate();
+            isInitialized = true;
+        }
+
+        OnLoop();
+        repaint();
     }
 
     private Graphics canvas;
