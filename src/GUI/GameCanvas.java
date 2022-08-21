@@ -49,11 +49,11 @@ public class GameCanvas extends DisplayCanvas
     {
         InitScreen();
 
-        //if (isEmulationRunning)
-        //{
-        //    do { bus.Clock(); } while (!bus.GetNesPpu().frameComplete);
-        //    bus.GetNesPpu().frameComplete = false;
-        //}
+        if (isEmulationRunning)
+        {
+            do { bus.Clock(); } while (!bus.GetNesPpu().frameComplete);
+            bus.GetNesPpu().frameComplete = false;
+        }
         if (CheckForKey(VirtualKeys.VK_A))
         {
             if (!lockInputKey1)
