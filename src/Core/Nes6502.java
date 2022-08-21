@@ -6,9 +6,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import Misc.Utils;
-import Primitives.ByteFPtrVoid;
 
-public class Nes6502 implements Cpu8Bits
+public class Nes6502
 {
     public Nes6502()
     {
@@ -284,13 +283,11 @@ public class Nes6502 implements Cpu8Bits
         instructionSet.add(new Instruction("???", this::XXX, AddrModes.IMP, this::IMP, (byte) 7)); // 0xFF
     }
 
-    @Override
     public void ConnectBus(Bus _bus)
     {
         bus = _bus;
     }
 
-    @Override
     public void Clock()
     {
         if (cycles == 0)
@@ -311,7 +308,6 @@ public class Nes6502 implements Cpu8Bits
         cycles--;
     }
 
-    @Override
     public void Reset()
     {
         addrAbs = 0xFFFC;
@@ -332,7 +328,6 @@ public class Nes6502 implements Cpu8Bits
         cycles    = 8;
     }
 
-    @Override
     public void InterruptRequest()
     {
         if (GetFlag(Flags6502.DisableInterrupts) == 0)
@@ -357,7 +352,6 @@ public class Nes6502 implements Cpu8Bits
         }
     }
 
-    @Override
     public void NonMaskableInterrupt()
     {
         WriteByte(0x0100 + SP, (byte) ((PC >> 8) & 0x00FF));
@@ -379,7 +373,6 @@ public class Nes6502 implements Cpu8Bits
         cycles = 8;
     }
 
-    @Override
     public byte FetchData()
     {
         Instruction currentInstruction = GetInstruction(currentOpCode);
@@ -390,13 +383,11 @@ public class Nes6502 implements Cpu8Bits
         return lastFetch;
     }
 
-    @Override
     public List<Instruction> GetInstructionSet()
     {
         return instructionSet;
     }
 
-    @Override
     public Instruction GetInstruction(byte opCode)
     {
         return GetInstructionSet().get(opCode & 0xFF);

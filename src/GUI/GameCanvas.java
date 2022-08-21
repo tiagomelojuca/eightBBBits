@@ -12,6 +12,7 @@ import Core.Bus;
 import Core.Cartridge;
 import Core.Flags6502;
 import Core.Nes6502;
+import Defs.ExitCodes;
 import Misc.Utils;
 
 import Primitives.Pixel;
@@ -27,13 +28,18 @@ public class GameCanvas extends DisplayCanvas
     @Override
     protected void OnCreate()
     {
+        rom = new Cartridge("C:\\Users\\tiago\\Projetos\\eightBBBits\\tests\\nestest.nes");
+        if (!rom.IsValidImage())
+        {
+            System.exit(ExitCodes.ERROR_INVALID_ROM);
+        }
+
         bus = new Bus();
-        rom = new Cartridge("C:\\Users\\tiago\\OneDrive\\Área de Trabalho\\Projetos\\eightBBBits\\tests\\nestest.nes");
         bus.InsertCartridge(rom);
         mapAsm = bus.GetNesCpu().Disassemble(0x0000, 0xFFFF);
 
         isEmulationRunning = false;
-        residualTime = 0.0f;
+        selectedPalette = 0x00;
 
         bus.GetNesCpu().Reset();
     }
@@ -95,28 +101,21 @@ public class GameCanvas extends DisplayCanvas
             lockInputKey3 = false;
         }
 
-        DrawCanvas();
-    }
-
-    private void LoadROM(String rom)
-    {
-        int offset = 0x8000;
-
-        while (rom.length() > 0) {
-            String bStr = rom.substring(0, 2);
-            rom = rom.substring(rom.length() > 2 ? 3 : 2);
-
-            byte b = (byte) Integer.parseInt(bStr, 16);
-            bus.CpuWrite(offset, b);
-            offset++;
+        if (CheckForKey(VirtualKeys.VK_BACKSPACE))
+        {
+            if (!lockInputKey4)
+            {
+                selectedPalette += 1;
+                selectedPalette &= 0x07;
+            }
+            lockInputKey4 = true;
+        }
+        else
+        {
+            lockInputKey4 = false;
         }
 
-        bus.CpuWrite(0xFFFC, (byte) 0x00);
-        bus.CpuWrite(0xFFFD, (byte) 0x80);
-
-        mapAsm = bus.GetNesCpu().Disassemble(0x0000, 0xFFFF);
-
-        bus.GetNesCpu().Reset();
+        DrawCanvas();
     }
 
     private void InitScreen()
@@ -128,27 +127,11 @@ public class GameCanvas extends DisplayCanvas
     public void DrawCanvas()
     {
 		DrawCpu(440, 20);
-		DrawCode(440, 52, 26);
+		DrawCode(440, 96, 20);
         DrawSprite(20, 20, bus.GetNesPpu().GetScreen());
-    }
 
-    // Drawing Data
-    private void DrawRam(int x, int y, int addr, int rows, int cols)
-    {
-        int nRamX = x;
-        int nRamY = y;
-
-        for (int row = 0; row < rows; row++)
-        {
-            String strOffset = "$" + Utils.Hex(addr, 4) + ":";
-            for (int col = 0; col < cols; col++)
-            {
-                strOffset += " " + Utils.Hex(bus.CpuRead(addr, true), 2);
-                addr += 1;
-            }
-            DrawString(nRamX, nRamY, strOffset);
-            nRamY += 10;
-        }
+        DrawSprite(370, 348, bus.GetNesPpu().GetPatternTable((byte) 0x00, selectedPalette));
+        DrawSprite(508, 348, bus.GetNesPpu().GetPatternTable((byte) 0x01, selectedPalette));
     }
 
     private void DrawCpu(int x, int y)
@@ -267,10 +250,10 @@ public class GameCanvas extends DisplayCanvas
     private Map<Integer, String> mapAsm;
 
     private boolean isEmulationRunning;
-    private float residualTime;
-    private float elapsedTime;
+    private byte selectedPalette;
 
     private boolean lockInputKey1;
     private boolean lockInputKey2;
     private boolean lockInputKey3;
+    private boolean lockInputKey4;
 }

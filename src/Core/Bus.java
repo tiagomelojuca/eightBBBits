@@ -1,6 +1,6 @@
 package Core;
 
-public class Bus
+import Primitives.ByteWrapper;public class Bus
 {
     public Bus()
     {
@@ -45,7 +45,11 @@ public class Bus
     public void CpuWrite(int addr, byte data)
     {
         addr &= 0xFFFF;
-        if(addr >= 0x0000 && addr <= 0x1FFF)
+        if (rom.CpuWrite(addr, data))
+        {
+            // pass
+        }
+        else if(addr >= 0x0000 && addr <= 0x1FFF)
         {
             cpuRam[addr & 0x07FF] = data;
         }
@@ -58,9 +62,14 @@ public class Bus
     public byte CpuRead(int addr, boolean readOnly)
     {
         byte data = 0x00;
+        ByteWrapper wrappedData = new ByteWrapper(data);
 
         addr &= 0xFFFF;
-        if(addr >= 0x0000 && addr <= 0x1FFF)
+        if (rom.CpuRead(addr, wrappedData))
+        {
+            data = wrappedData.GetValue();
+        }
+        else if(addr >= 0x0000 && addr <= 0x1FFF)
         {
             data = cpuRam[addr & 0x07FF];
         }

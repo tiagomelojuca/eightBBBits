@@ -10,13 +10,17 @@ public class Ppu2C02
     public Ppu2C02()
     {
         tableName    = new byte[2][1024];
+        tablePattern = new byte[2][4096];
         tablePalette = new byte[32];
 
-        palScreen       = new Pixel[0x40];
-        sprScreen       = new Sprite(256, 240);
-        sprNameTable    = new Sprite[2];
-        sprNameTable[0] = new Sprite(256, 240);
-        sprNameTable[1] = new Sprite(256, 240);
+        palScreen          = new Pixel[0x40];
+        sprScreen          = new Sprite(256, 240);
+        sprNameTable       = new Sprite[2];
+        sprNameTable[0]    = new Sprite(256, 240);
+        sprNameTable[1]    = new Sprite(256, 240);
+        sprPatternTable    = new Sprite[2];
+        sprPatternTable[0] = new Sprite(128, 128);
+        sprPatternTable[1] = new Sprite(128, 128);
 
         scanline = 0;
         cycle    = 0;
@@ -174,12 +178,55 @@ public class Ppu2C02
         byte data = 0x00;
 
         addr &= 0x3FFF;
+        if (addr >= 0x0000 && addr <= 0x1FFF)
+        {
+            data = tablePattern[(addr & 0x1000) >> 12][addr & 0x0FFF];
+        }
+        else if (addr >= 0x2000 && addr <= 0x3EFF)
+        {
+            //
+        }
+        else if (addr >= 0x3F00 && addr <= 0x3FFF)
+        {
+            addr &= 0x001F;
+            if (addr == 0x0010) addr = 0x0000;
+            if (addr == 0x0014) addr = 0x0004;
+            if (addr == 0x0018) addr = 0x0008;
+            if (addr == 0x001C) addr = 0x000C;
+            data = tablePalette[addr];
+        }
 
         return data;
+    }
+    byte PpuRead(int addr)
+    {
+        return PpuRead(addr, false);
     }
     void PpuWrite(int addr, byte data)
     {
         addr &= 0x3FFF;
+        if (addr >= 0x0000 && addr <= 0x1FFF)
+        {
+            tablePattern[(addr & 0x1000) >> 12][addr & 0x0FFF] = data;
+        }
+        else if (addr >= 0x2000 && addr <= 0x3EFF)
+        {
+            //
+        }
+        else if (addr >= 0x3F00 && addr <= 0x3FFF)
+        {
+            addr &= 0x001F;
+            if (addr == 0x0010) addr = 0x0000;
+            if (addr == 0x0014) addr = 0x0004;
+            if (addr == 0x0018) addr = 0x0008;
+            if (addr == 0x001C) addr = 0x000C;
+            tablePalette[addr] = data;
+        }
+    }
+
+    public Pixel GetColorFromPaletteRAM(byte palette, byte pixel)
+    {
+        return palScreen[PpuRead(0x3F00 + (palette << 2) + pixel)];
     }
 
     // Debug
@@ -191,14 +238,44 @@ public class Ppu2C02
     {
         return sprNameTable[idx];
     }
+    public Sprite GetPatternTable(byte i, byte palette)
+    {
+        for (int nTileY = 0; nTileY < 16; nTileY++)
+        {
+            for (int nTileX = 0; nTileX < 16; nTileX++)
+            {
+                int offset = nTileY * 256 + nTileX * 16;
+                for (int row = 0; row < 8; row++)
+                {
+                    byte tileLsb = PpuRead(i * 0x1000 + offset + row + 0);
+                    byte tileMsb = PpuRead(i * 0x1000 + offset + row + 8);
+                    for (int col = 0; col < 8; col++)
+                    {
+                        byte pixel = (byte) (((byte) (tileLsb & 0x01)) + ((byte) (tileMsb & 0x01)));
+                        tileLsb >>= 1; tileMsb >>= 1;
+
+                        sprPatternTable[i].SetPixel(
+                            nTileX * 8 + (7 - col),
+                            nTileY * 8 + row,
+                            GetColorFromPaletteRAM(palette, pixel)
+                        );
+                    }
+                }
+            }
+        }
+
+        return sprPatternTable[i];
+    }
 
     private Cartridge rom;
     private byte[][] tableName;
+    private byte[][] tablePattern;
     private byte[]   tablePalette;
 
-    private Pixel[] palScreen;
-    private Sprite sprScreen;
+    private Pixel[]  palScreen;
+    private Sprite   sprScreen;
     private Sprite[] sprNameTable;
+    private Sprite[] sprPatternTable;
 
     private int scanline;
     private int cycle;

@@ -30,6 +30,7 @@ public class Mapper000 extends Mapper
 
         if (addr >= 0x8000 && addr <= 0xFFFF)
         {
+            mapped_addr.SetValue(addr & (prgBanks > 1 ? 0x7FFF : 0x3FFF));
             return true;
         }
 
@@ -53,6 +54,17 @@ public class Mapper000 extends Mapper
     @Override
     public boolean PpuMapWrite(int addr, IntWrapper mapped_addr)
     {
+        addr &= 0xFFFF;
+
+        if (addr >= 0x0000 && addr <= 0x1FFF)
+        {
+            if (chrBanks == 0)
+            {
+                mapped_addr.SetValue(addr);
+                return true;
+            }
+        }
+
         return false;
     }
 }
