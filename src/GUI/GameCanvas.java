@@ -13,8 +13,8 @@ import Core.Cartridge;
 import Core.Flags6502;
 import Core.Nes6502;
 import Defs.ExitCodes;
+import Misc.Globals;
 import Misc.Utils;
-
 import Primitives.Pixel;
 import Primitives.Sprite;
 
@@ -28,7 +28,7 @@ public class GameCanvas extends DisplayCanvas
     @Override
     protected void OnCreate()
     {
-        rom = new Cartridge("C:\\Users\\tiago\\Projetos\\eightBBBits\\tests\\nestest.nes");
+        rom = new Cartridge(Globals.GetRomPath());
         if (!rom.IsValidImage())
         {
             System.exit(ExitCodes.ERROR_INVALID_ROM);

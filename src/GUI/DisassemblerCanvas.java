@@ -9,9 +9,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import Core.Bus;
-import Core.Cartridge;import Core.Flags6502;
+import Core.Cartridge;
+import Core.Flags6502;
 import Core.Nes6502;
-import Defs.ExitCodes;import Misc.Utils;
+import Defs.ExitCodes;
+import Misc.Globals;
+import Misc.Utils;
 
 public class DisassemblerCanvas extends DisplayCanvas
 {
@@ -23,7 +26,7 @@ public class DisassemblerCanvas extends DisplayCanvas
     @Override
     protected void OnCreate()
     {
-        Cartridge rom = new Cartridge("C:\\Users\\tiago\\Projetos\\eightBBBits\\tests\\nestest.nes");
+        Cartridge rom = new Cartridge(Globals.GetRomPath());
         if (!rom.IsValidImage())
         {
             System.exit(ExitCodes.ERROR_INVALID_ROM);
