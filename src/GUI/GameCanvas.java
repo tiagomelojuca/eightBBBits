@@ -51,9 +51,18 @@ public class GameCanvas extends DisplayCanvas
 
         if (isEmulationRunning)
         {
-            do { bus.Clock(); } while (!bus.GetNesPpu().frameComplete);
+            String breakPoint = "C07E";
+
+            do { bus.Clock(); } while (!bus.GetNesPpu().frameComplete &&
+                                       !Utils.Hex(bus.GetNesCpu().GetRegisterPC(), 4).equals(breakPoint));
             bus.GetNesPpu().frameComplete = false;
+
+            if (!breakPoint.equals("FFFF") && Utils.Hex(bus.GetNesCpu().GetRegisterPC(), 4).equals(breakPoint))
+            {
+                isEmulationRunning = false;
+            }
         }
+
         if (CheckForKey(VirtualKeys.VK_A))
         {
             if (!lockInputKey1)
@@ -252,8 +261,8 @@ public class GameCanvas extends DisplayCanvas
     private boolean isEmulationRunning;
     private byte selectedPalette;
 
-    private boolean lockInputKey1;
-    private boolean lockInputKey2;
-    private boolean lockInputKey3;
-    private boolean lockInputKey4;
+    private boolean lockInputKey1 = false;
+    private boolean lockInputKey2 = false;
+    private boolean lockInputKey3 = false;
+    private boolean lockInputKey4 = false;
 }
